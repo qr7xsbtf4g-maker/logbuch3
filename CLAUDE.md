@@ -1,4 +1,4 @@
-# CLAUDE.md — Logbuch Web-App
+# CLAUDE.md — Dashboard Web-App
 
 ## Kommunikation
 - Antworte **immer auf Deutsch**.
@@ -10,7 +10,7 @@
 
 ## Projekt-Überblick
 
-**"LOGBUCH · DJI"** — Eine Single-File PWA (`index.html`) als persönliches Trainings- und Tageslogbuch.  
+**"DASHBOARD · DJI"** — Eine Single-File PWA (`index.html`) als persönliches Trainings- und Tageslogbuch.  
 Kein Build-System, kein Framework — reines HTML/CSS/JavaScript mit `localStorage` als Datenbank.
 
 ---
@@ -84,6 +84,17 @@ Schriftarten:
 Das Zone 2 Cardio wird auf dem **BikeErg** absolviert.  
 Im Trainings-Tab gibt es bereits ein Cardio-Feld (Art, Dauer, Uhrzeit, Nüchtern-Cardio).  
 Zone-2-spezifische Felder (Herzfrequenz-Zone, Watt, Kalorien) ggf. ergänzen.
+
+---
+
+## Supplement-Änderungen
+
+**Pflichtprozess:** Jede Änderung am Supplement-Stack (neues Supplement hinzufügen, Dosierung ändern, Supplement entfernen) wird **vor der Umsetzung** mit dem Skill `/supplement-stack-check` geprüft.
+
+Ablauf:
+1. Skill `/supplement-stack-check` aufrufen mit dem geplanten Supplement und aktueller Stack-Kontext
+2. Feedback abwarten und Dustin präsentieren
+3. Erst nach Dustins Freigabe die Änderung in `index.html` einbauen
 
 ---
 
