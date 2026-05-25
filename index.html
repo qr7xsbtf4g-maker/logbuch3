@@ -15,9 +15,9 @@
 <style>
 :root{--bg:#050507;--s1:#0B0B12;--s2:#111119;--s3:#17171F;--bd:rgba(192,192,210,0.10);--bd2:rgba(192,192,210,0.18);--gold:#c9a84c;--goldl:#e8c76a;--goldd:#8a6f30;--goldf:rgba(201,168,76,0.08);--tx:#E4ECE8;--txm:#8E8EA4;--txd:rgba(142,142,164,0.42);--ok:#1C7A3A;--okl:#30D158;--okf:rgba(48,209,88,0.10);--err:#7B2020;--errl:#FF453A;--errf:rgba(255,69,58,0.10);--warn:#8a6030;--warnl:#FF9F0A;--r:10px;--r2:13px;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);--sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px);--px:18px}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{background:linear-gradient(180deg,#050507 0%,#08080F 100%)}
+html{background-color:#050507;background:linear-gradient(180deg,#050507 0%,#08080F 100%)}
 html,body{height:100%;overflow:hidden;color:var(--tx);font-family:'Barlow Condensed',sans-serif;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
-body{background:transparent}
+body{background:#050507}
 #swipe-container{height:100%;overflow:hidden}
 
 /* SPLASH */
@@ -43,7 +43,8 @@ body{background:transparent}
 .view.active{display:block}
 
 /* ── BOTTOM TAB BAR ── */
-.tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;align-items:stretch;gap:4px;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));background:var(--s1);border-top:1px solid var(--bd)}
+.tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;align-items:stretch;gap:4px;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));background:var(--s1);border-top:1px solid var(--bd);-webkit-backdrop-filter:none}
+.tab-bar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:env(safe-area-inset-bottom,0px);background:var(--s1);z-index:-1}
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 6px;border:none;background:transparent;border-radius:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s,transform .25s cubic-bezier(0.34,1.56,0.64,1);position:relative}
 .tab-btn:active{transform:scale(0.86)}
 .tab-btn.active{background:rgba(201,168,76,0.1)}
