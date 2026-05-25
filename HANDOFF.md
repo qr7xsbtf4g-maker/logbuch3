@@ -3,88 +3,85 @@
 ## Aktueller Stand
 
 **Datei:** `/Users/djoker/Projekt Dashboard CC/index.html`  
-**Zeilen:** ~2810  
-**Kein Git**, kein Build-System — direkte Dateibearbeitung, Syntaxcheck via `node --check`
+**Zeilen:** ~2772  
+**Git:** Ja — remote auf GitHub, GitHub Pages aktiv  
+**Syntaxcheck:** `node --check <(sed -n '/<script>/,/<\/script>/p' index.html | sed '1d;$d')`
+
+---
+
+## GitHub / Deployment
+
+- **Repo:** https://github.com/qr7xsbtf4g-maker/logbuch3
+- **GitHub Pages:** https://qr7xsbtf4g-maker.github.io/logbuch3/
+- **Remote URL enthält PAT** (in `.git/config`) — Token in `.git/config` gespeichert, nicht hier dokumentieren
+- Push: `git push origin main` — kein Force mehr nötig, Remote ist jetzt in Sync
+- GitHub Pages baut automatisch nach jedem Push (~1–2 min)
 
 ---
 
 ## Was in dieser Session erledigt wurde
 
-### UX-Verbesserungen (nach Vergleich mit Whoop/Oura/Strong/Garmin)
+### Design-Overhaul: Premium Dark Theme
 
-#### Ring: Tageszeit → Tages-Completion
-- Neue Funktion `calcDayCompletion()` — 4 Aufgaben à 25%: Morgen (Gewicht/Schlaf), Supps (alle DAILY_SUPPS abgehakt), Training (type==='training' oder 'cardio' für heute), Abend (Stimmung & Energie)
-- `updateDayRing()` komplett ersetzt: zeigt `pct%`, nächste offene Aufgabe (`MORGEN`/`SUPPS`/`TRAINING`/`ABEND`/`KOMPLETT`), `done/4`
-- Ring-Farbe: `rgba(255,255,255,0.12)` bei 0%, `--gold` bei 1–3/4, `--okl` bei 4/4
-- `updateDayRing()` wird jetzt auch nach `saveMorning`, `saveEvening`, `saveTraining`, `saveCardio`, `toggleSuppItem` aufgerufen
-- Entfernt: `ringColor()`, `RING_WAKE`, `RING_SLEEP`, Konstante `RING_C`, `setInterval` für Ring
+Das gesamte Design wurde neu gestaltet. Orientierung an **kiberatung.de** (near-black Surfaces, cool blue-gray Borders) + Apple HIG.
 
-#### Training-Tab: Split-Banner
-- Neues HTML-Banner `#today-plan-banner` oben im Training-Tab (vor "Krafttraining") mit `#today-plan-day`, `#today-plan-label`, `#today-plan-badge`
-- Neue Funktion `initTodayPlan()` — zeigt Wochentag + Split-Label + Badge ("GEPLANT"/"RUHETAG"), bordert gold an Trainingstagen
-- `_todaySplit` wird in `ST` gespeichert (z.B. `'OK'`, `'UK'`, `'GK1'`, `'GK2'` oder `null`)
-- `togKraft()` erweitert: wenn Kraft-Ja gedrückt und noch kein Split gewählt, wird `ST._todaySplit` automatisch selektiert
-- `initTodayPlan()` wird in `init()` und in `goTab()` bei idx===1 aufgerufen
+**Finales `:root` (Premium Dark):**
+```css
+:root{--bg:#050507;--s1:#0B0B12;--s2:#111119;--s3:#17171F;--bd:rgba(192,192,210,0.10);--bd2:rgba(192,192,210,0.18);--gold:#c9a84c;--goldl:#e8c76a;--goldd:#8a6f30;--goldf:rgba(201,168,76,0.08);--tx:#E4ECE8;--txm:#8E8EA4;--txd:rgba(142,142,164,0.42);--ok:#1C7A3A;--okl:#30D158;--okf:rgba(48,209,88,0.10);--err:#7B2020;--errl:#FF453A;--errf:rgba(255,69,58,0.10);--warn:#8a6030;--warnl:#FF9F0A;--r:10px;--r2:13px;...}
+```
 
-#### Datum-Feld: kompaktes Inline-Format
-- Ersetzt: `<div class="f"><label>Datum</label><input type="date" id="d-datum"></div>`
-- Neu: kompakte Flex-Zeile — kleines `DATUM`-Label links, `#d-datum` Input transparent/gold rechts
-- `id="d-datum"` bleibt unverändert (wird überall referenziert)
+- `html` Background: `linear-gradient(180deg,#050507 0%,#08080F 100%)` + `background-color:#050507` als Fallback
+- `body`: `background:#050507` (vorher `transparent` → führte zu weißem Balken)
+- Tab-Bar: `background:var(--s1)` + `::after` Pseudo-Element für Safe Area
+- Kein Glassmorphism, kein `backdrop-filter`
+- Kein Theme-Toggle — nur ein Theme (Premium Dark)
 
-#### Hero-Metriken: Farbdifferenzierung
-- `updateHeroNumbers()` setzt jetzt `style.color` pro Metrik:
-  - Gewicht/Schlaf: `--txd` wenn leer, `--tx` wenn Wert vorhanden
-  - Streak: `--txd` bei 0, `--gold` bei > 0
+**Aktualisierte Elemente auf CSS-Vars:**
+- `.ticker`, `.hero-item`, `.supp-item`, `.th-entry` → `background:var(--s2);border:1px solid var(--bd)`
+- `.ta-modal`, `.author-modal` → `background:var(--s1)`
+- Quote/Modal-Text → `color:var(--tx)` / `var(--txm)` / `var(--txd)`
 
-### Bug-Fix: Initialisierungsreihenfolge
-- **Ursache:** `DAILY_SUPPS`, `SLEEP_SUPPS`, `ILLNESS_SUPPS` und `suppData` waren mit `let`/`const` nach dem `init()`-Aufruf deklariert → Temporal Dead Zone → ReferenceError → Ladescreen friert ein
-- **Fix:** Alle drei SUPPS-Konstanten und `suppData` nach oben zu den anderen Globals verschoben (direkt nach `ST`-Deklaration, ~Zeile 876)
-- `ST._todaySplit:null` direkt in der ST-Deklaration ergänzt
+### Bug-Fix: Weißer Balken unten (iOS Safe Area)
+
+- **Ursache:** `body{background:transparent}` — iOS zeigte System-Hintergrund (weiß) im Safe Area Bereich
+- **Fix 1:** `body{background:#050507}`
+- **Fix 2:** `html` erhält zusätzlich `background-color:#050507` als Fallback zum Gradient
+- **Fix 3:** `.tab-bar::after` Pseudo-Element mit `height:env(safe-area-inset-bottom,0px);background:var(--s1)` deckt den Bereich unter den Icons explizit ab
 
 ---
 
 ## Was in früheren Sessions erledigt wurde
 
-### Apple Health — vollständig entfernt (frühere Session)
-Alle Health-Sync-Funktionen (`writeToHealth`, `syncFromClipboard`, `importFromHealth`, Health-Card im Daily-Tab, Schritte-Statistiken im Weekly-Tab) wurden auf Wunsch komplett entfernt.
+### UX-Verbesserungen
 
-Einzige Ausnahme: Der **"♥ In Apple Health schreiben"-Button** unter dem Gewicht-Feld ist noch vorhanden, da er explizit wieder hinzugefügt wurde. Er triggert `writeToHealth()` via `shortcuts://run-shortcut?name=Logbuch-zu-Health&input=...` und sendet das Gewicht im Format `85,1` (Komma statt Punkt — wegen deutschem iOS Shortcuts-Dezimalformat).
+#### Ring: Tageszeit → Tages-Completion
+- `calcDayCompletion()` — 4 Aufgaben à 25%: Morgen, Supps, Training, Abend
+- `updateDayRing()` zeigt `pct%`, nächste offene Aufgabe, `done/4`
+- Ring-Farbe: transparent bei 0%, `--gold` bei 1–3/4, `--okl` bei 4/4
+- Wird nach `saveMorning`, `saveEvening`, `saveTraining`, `saveCardio`, `toggleSuppItem` aufgerufen
 
-### Umbenennung: Logbuch → Dashboard
-- App-Ladescreen: "LOGBUCH" → "DASHBOARD"
-- Nav-Logo: "LOGBUCH" → "DASHBOARD"
-- Ordner umbenannt: `Projekt Logbuch CC` → `Projekt Dashboard CC`
-- CLAUDE.md aktualisiert
+#### Training-Tab: Split-Banner
+- `#today-plan-banner` oben im Training-Tab mit Wochentag, Split-Label, Badge
+- `initTodayPlan()` — GEPLANT/RUHETAG, gold-Border an Trainingstagen
+- `_todaySplit` in `ST` gespeichert; `togKraft()` wählt Split automatisch
 
-### Neue Features
-- **Gewicht-History-Modal:** Tap auf Gewicht-Hero-Item zeigt letzte 7 Einträge mit Delta-Anzeige (grün/rot)
-- **Koffein:** ½ Höllenfeuer-Button (50mg) und freies Custom-Eingabefeld für beliebige mg-Menge
-- **Health-Schreib-Button:** Steht als eigenständiger Button unter den Gewicht/Schlaf-Feldern (vorher im Label, was versehentliche "Eintrag löschen"-Taps verursachte)
+#### Datum-Feld & Hero-Metriken
+- Datum: kompaktes Inline-Format
+- Hero-Farben: `--txd` bei leer/0, `--tx` bei Wert, `--gold` bei Streak > 0
 
-### Entfernte Felder
-- **Wasser (l)**, **Cheats**, **Kalorien-Ziel** — komplett aus HTML, JS (save/load/render) und Weekly entfernt
+### Bug-Fix: Initialisierungsreihenfolge
+- `DAILY_SUPPS`, `SLEEP_SUPPS`, `ILLNESS_SUPPS`, `suppData` nach oben zu Globals verschoben (verhinderte TDZ-ReferenceError → Ladescreen-Freeze)
 
-### Supplement-Stack aktualisiert
-- Vitamin D3 + K2: von `abends` → `mahlzeit`
-- GEN-All in One: neu hinzugefügt (`mahlzeit`)
-- Nattokinase: aus ILLNESS_SUPPS entfernt
-- Vitamin D3 + K2 (akut): aus ILLNESS_SUPPS entfernt
-- Alle Dosis-Strings annotiert mit Fettlöslichkeit und Mahlzeit-Pflicht (via `/supplement-stack-check`)
+### Apple Health
+- Alle Health-Sync-Funktionen entfernt
+- Einzige Ausnahme: **"♥ In Apple Health schreiben"-Button** — triggert `shortcuts://run-shortcut?name=Logbuch-zu-Health&input=...`, sendet Gewicht als `85,1` (Komma, deutsches iOS-Format)
 
-### Bug-Fixes
-- **App-Crash nach Felderentfernung:** `loadTodayEntry()` referenzierte gelöschte DOM-Elemente (`cheat-field`, `d-cheats`) — durch bereinigten Block ersetzt
-- **Overscroll ins Schwarze:** `min-height:100vh` auf `.view` entfernt
-- **Dezimalformat Health:** `85.05` wurde als `8.505` in Health angezeigt — Fix: `toFixed(1).replace('.', ',')`
-
-### Code-Cleanup
-- Totes Konstant `const TABS=[...]` entfernt
-- Tote Funktionen `popExSel()` und `renderExHistory()` entfernt (referenzierten nicht-existente IDs `ex-select`, `ex-history-table`)
-- Tote Variable `weeklyDaily` entfernt (wurde nach Kalorien/Cheats-Entfernung nicht mehr gelesen)
-
-### Performance & Stabilität
-- **In-Memory-Cache für `db()`:** `_dbCache` hält geparsten Array; wird nur bei Write invalidiert — kein unnötiges `JSON.parse` pro Render
-- **localStorage-Quota-Fehlerbehandlung:** Alle Save-Funktionen (`dbS`, `dbCIS`, `dbPHS`, `dbHIS`) nutzen `_safeSave()` mit `try/catch` — bei `QuotaExceededError` erscheint Toast statt stiller Crash
-- **Foto-Komprimierung mit Fallback:** Max-Dimension 800px, Qualität 0.75 → 0.5 → 0.3 wenn Bild nach erster Stufe noch >300KB
+### Weitere frühere Änderungen
+- Umbenennung Logbuch → Dashboard
+- Gewicht-History-Modal (letzte 7 Einträge mit Delta)
+- Koffein: ½ Höllenfeuer (50mg) + Custom-Eingabe
+- Entfernt: Wasser, Cheats, Kalorien-Ziel
+- Performance: `_dbCache`, `_safeSave()`, Foto-Komprimierung mit Fallback
 
 ---
 
@@ -129,16 +126,16 @@ Einzige Ausnahme: Der **"♥ In Apple Health schreiben"-Button** unter dem Gewic
 ## Wichtige technische Details
 
 - **localStorage-Keys:** `lbv4` (Daily + Training), `lbv4_ci` (Check-in), `lbv4_ph` (Fotos), `lbv4_hi` (History), `lbv4_supp` (Supplement-Status), `lbv4_koff` (Koffein-Log), `lb_kraft_tog` / `lb_cardio_tog` (Toggle-Persistenz bis Mitternacht), `lb_backup_ts` (letzter Export-Zeitstempel)
-- **Cache-Invalidierung:** Nur `dbS()` setzt `_dbCache`. `dbCI`, `dbPH`, `dbHI` haben keinen Cache — werden seltener aufgerufen
-- **Health-Button Shortcut-Name:** muss exakt `Logbuch-zu-Health` heißen (bestehender Shortcut, nicht neu gebaut)
+- **Cache-Invalidierung:** Nur `dbS()` setzt `_dbCache`. `dbCI`, `dbPH`, `dbHI` haben keinen Cache
+- **Health-Button Shortcut-Name:** muss exakt `Logbuch-zu-Health` heißen
 - **Gewicht-Format für Health:** `val.toFixed(1).replace('.', ',')` — deutsches Dezimalformat zwingend
-- **Syntaxcheck-Befehl:** `node --check <(sed -n '/<script>/,/<\/script>/p' index.html | sed '1d;$d')`
+- **Syntaxcheck:** `node --check <(sed -n '/<script>/,/<\/script>/p' index.html | sed '1d;$d')`
 
 ---
 
 ## Prozessregeln (aus CLAUDE.md)
 
-- **Supplement-Änderungen:** Immer zuerst `/supplement-stack-check` laufen lassen, Feedback vorlegen, erst nach Freigabe in `index.html` einbauen
+- **Supplement-Änderungen:** Immer zuerst `/supplement-stack-check` laufen lassen, Feedback vorlegen, erst nach Freigabe einbauen
 - **Keine neuen Dateien** — alles bleibt in `index.html`
 - **Vor Löschen/Überschreiben** immer nachfragen
 
@@ -146,4 +143,5 @@ Einzige Ausnahme: Der **"♥ In Apple Health schreiben"-Button** unter dem Gewic
 
 ## Offene Punkte / Ideen
 
-- iOS Shortcut "Health → Logbuch" existiert nicht mehr (wurde gelöscht) — falls wieder gewünscht, Anleitung aus alter HANDOFF konsultieren
+- iOS Shortcut "Health → Logbuch" existiert nicht mehr — falls wieder gewünscht, Anleitung aus alter HANDOFF konsultieren
+- GitHub Pages URL kann als PWA auf dem iPhone zum Homescreen hinzugefügt werden (Safari → Teilen → Zum Home-Bildschirm)
