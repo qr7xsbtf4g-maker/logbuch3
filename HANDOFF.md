@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 **Datei:** `/Users/djoker/Projekt Dashboard CC/index.html`  
-**Zeilen:** ~2772  
+**Zeilen:** ~2771  
 **Git:** Ja — remote auf GitHub, GitHub Pages aktiv  
 **Syntaxcheck:** `node --check <(sed -n '/<script>/,/<\/script>/p' index.html | sed '1d;$d')`
 
@@ -20,6 +20,56 @@
 ---
 
 ## Was in dieser Session erledigt wurde
+
+### Check-in: Wochenschnitt / Verlauf / Sonntag
+- Wochenschnitt-Boxen (Gewicht + Cardio) sind jetzt klickbar → öffnen neues Modal `#wk-hist-modal-bg`
+- Modal zeigt letzte 8 Wochen mit Datum-Range, Wert und Woche-vs-Vorwoche Delta
+- Vergleich "vs Vorwoche" (trendArrow, Cardio-Diff, Wochenabschluss-Block) **nur am Sonntag** sichtbar
+
+### Training: ERLEDIGT Badge
+- Nach `saveTraining()` → `markTodayTrainingDone()`: Badge "GEPLANT" → "ERLEDIGT" (grün, `--okl`), Banner-Border → `--ok`
+- `initTodayPlan()` prüft beim Laden ob Trainings-Eintrag für heute existiert → setzt Badge automatisch
+
+### Abend: One Week Erledigt? + Journal
+- In der Abend-Karte (unter Verdauung): Ja/Nein Toggle `togOneWeek()` → speichert `oneWeekDone` im daily-Eintrag
+- Journaling-Block: feste Frage ("Wofür bin ich heute konkret dankbar?") + täglich rotierende Frage (7 Fragen, nach Wochentag)
+  - Mo: Was hat mich heute angetrieben?
+  - Di: Wem bin ich dankbar — und warum konkret?
+  - Mi: Was hat heute besser geklappt als erwartet?
+  - Do: Welche heutige Herausforderung war eigentlich eine Chance?
+  - Fr: Was nehme ich aus dieser Woche als Stärke mit?
+  - Sa: Worauf bin ich heute stolz — groß oder klein?
+  - So: Was möchte ich morgen bewusst anders machen?
+- Textarea speichert `eveningJournal` + `journalQuestion` im daily-Eintrag
+- "Letzte Einträge"-Button zeigt letzte 5 Journal-Einträge inline
+- Journal wird in `renderDH` Detail-Row angezeigt
+- `loadTodayEntry`, `resetDaily`, `resetDailyAbend` alle angepasst
+
+### Bug-Fix: Gym-Wechsel löscht Training-Inputs
+- `selGym()` speichert jetzt alle Set-Inputs (kg + reps) vor dem `buildEx()`-Rebuild
+- Nach dem Rebuild werden die Werte wiederhergestellt (identisch zu `moveEx`)
+- Gym-Namen der Übungen werden korrekt aktualisiert, eingetippte Werte bleiben erhalten
+
+### Safe-Area / Tab-Bar: iPhone 17 Pro
+- `.tab-bar`: `padding-bottom: calc(6px + env(safe-area-inset-bottom,0px))` — Home-Indikator-Bereich wird respektiert
+- `.view`: `padding-bottom: calc(108px + env(safe-area-inset-bottom,0px))` — Scroll-Bereich passt sich an
+
+### Timer-Signal: 3-Ton-Chime + visuelles Banner
+- `beep()` ersetzt: statt Einzelton jetzt aufsteigendes C5-E5-G5 Sinus-Chime mit Envelope
+- Neue Funktion `timerDoneNotify(type)`: Vibration (150-80-150-80-300ms) + gold Banner (#timer-banner) oben im Viewport
+- Banner zeigt: "Seite wechseln!" (unilateral) oder "Pause vorbei — weiter!" (normaler Rest)
+- CSS: `.timer-banner` / `.timer-banner.visible` (position:fixed, z-index:500, gold, fade-in)
+
+### Progressive Overload: 5–8 Wiederholungs-Regel
+- `setProgLabel()` komplett neu nach Dustins Regel:
+  - `▼` Unter 5 Wdh → zu schwer
+  - `▲` Gewicht erhöht + ≥5 Wdh → Progression
+  - `▲` 8 Wdh erreicht → "nächste Session Gewicht erhöhen"
+  - `▲` Gleiche kg, mehr Wdh → rep-Progression
+  - `→` Letzte Session war 8 Wdh, Gewicht nicht erhöht → Hinweis
+  - `▼` Gewicht reduziert → Regression
+
+---
 
 ### Design-Overhaul: Premium Dark Theme
 
@@ -41,12 +91,13 @@ Das gesamte Design wurde neu gestaltet. Orientierung an **kiberatung.de** (near-
 - `.ta-modal`, `.author-modal` → `background:var(--s1)`
 - Quote/Modal-Text → `color:var(--tx)` / `var(--txm)` / `var(--txd)`
 
-### Bug-Fix: Weißer Balken unten (iOS Safe Area)
+### Bug-Fix: Weißer/schwarzer Balken unten — Safe Area komplett entfernt
 
-- **Ursache:** `body{background:transparent}` — iOS zeigte System-Hintergrund (weiß) im Safe Area Bereich
-- **Fix 1:** `body{background:#050507}`
-- **Fix 2:** `html` erhält zusätzlich `background-color:#050507` als Fallback zum Gradient
-- **Fix 3:** `.tab-bar::after` Pseudo-Element mit `height:env(safe-area-inset-bottom,0px);background:var(--s1)` deckt den Bereich unter den Icons explizit ab
+- **Ursache:** `body{background:transparent}` + Safe-Area-Padding auf Tab-Bar → sichtbarer Balken
+- **Fix:** `body{background:#050507}`, `html` mit `background-color:#050507` als Fallback
+- **Safe Area komplett raus** (auf Wunsch): kein `env(safe-area-inset-bottom)` mehr in Tab-Bar, `.view` oder Toast
+- Tab-Bar Background: `var(--bg)` statt `var(--s1)` — nahtlos mit Seitenhintergrund
+- Kein `::after` Pseudo-Element
 
 ---
 
@@ -145,3 +196,4 @@ Das gesamte Design wurde neu gestaltet. Orientierung an **kiberatung.de** (near-
 
 - iOS Shortcut "Health → Logbuch" existiert nicht mehr — falls wieder gewünscht, Anleitung aus alter HANDOFF konsultieren
 - GitHub Pages URL kann als PWA auf dem iPhone zum Homescreen hinzugefügt werden (Safari → Teilen → Zum Home-Bildschirm)
+- Safe Area unten ist bewusst entfernt — falls Tab-Buttons schlecht tippbar werden, `padding-bottom:calc(6px + env(safe-area-inset-bottom,0px))` in `.tab-bar` wieder ergänzen

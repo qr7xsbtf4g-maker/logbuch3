@@ -39,11 +39,11 @@ body{background:#050507}
 .nav-tab{flex:1;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;padding:13px 4px 12px;border:none;background:transparent;color:var(--txm);cursor:pointer;text-transform:uppercase;border-bottom:2px solid transparent;transition:all .15s;text-align:center}
 .nav-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 
-.view{display:none;padding-top:16px;padding-left:calc(var(--sl) + var(--px));padding-right:calc(var(--sr) + var(--px));padding-bottom:108px;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.view{display:none;padding-top:16px;padding-left:calc(var(--sl) + var(--px));padding-right:calc(var(--sr) + var(--px));padding-bottom:calc(108px + env(safe-area-inset-bottom,0px));height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .view.active{display:block}
 
 /* ── BOTTOM TAB BAR ── */
-.tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;align-items:stretch;gap:4px;padding:6px 10px;background:var(--bg);border-top:1px solid var(--bd)}
+.tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;align-items:stretch;gap:4px;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--bd)}
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 6px;border:none;background:transparent;border-radius:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s,transform .25s cubic-bezier(0.34,1.56,0.64,1);position:relative}
 .tab-btn:active{transform:scale(0.86)}
 .tab-btn.active{background:rgba(201,168,76,0.1)}
@@ -54,6 +54,23 @@ body{background:#050507}
 .tab-btn.active .tab-ico{color:var(--gold);text-shadow:0 0 10px rgba(201,168,76,0.5)}
 .tab-lbl{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--txm);transition:color .2s}
 .tab-btn.active .tab-lbl{color:var(--gold)}
+
+/* ── TIMER DONE BANNER ── */
+.timer-banner{position:fixed;top:calc(env(safe-area-inset-top,0px) + 64px);left:16px;right:16px;z-index:500;background:var(--gold);color:#080808;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;text-align:center;padding:14px 16px;border-radius:14px;transform:translateY(-12px);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;box-shadow:0 4px 24px rgba(201,168,76,0.45)}
+.timer-banner.visible{opacity:1;transform:translateY(0)}
+
+/* ── ABEND JOURNAL ── */
+.journal-section{border-top:1px solid var(--bd);margin-top:14px;padding-top:14px}
+.journal-q-label{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.journal-q{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--tx);line-height:1.5;margin-bottom:4px}
+.journal-q-rotate{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--txm);line-height:1.5;margin-bottom:10px}
+.journal-history{margin-top:12px;padding-top:12px;border-top:1px solid var(--bd)}
+.journal-hist-entry{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--txm);line-height:1.5;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.journal-hist-date{font-family:'DM Mono',monospace;font-size:9px;color:var(--txd);margin-bottom:2px}
+
+/* ── STAT-BOX KLICKBAR ── */
+.stat-box-tap{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s}
+.stat-box-tap:active{background:var(--s3)}
 
 /* ── AUTO-SAVE INDIKATOR ── */
 .autosave-ind{display:flex;align-items:center;gap:5px;font-family:'Barlow Condensed',sans-serif;font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--txm);min-height:18px;margin-bottom:6px;transition:opacity .4s}
@@ -556,7 +573,25 @@ body{background:#050507}
     <div class="slider-wrap" style="margin-top:0"><div class="lbl">Stimmung</div><div class="slider-row"><input type="range" min="1" max="10" value="1" step="1" id="sl-stimmung" oninput="updSl('stimmung')"><span class="slider-val" id="sv-stimmung">1</span><span class="slider-max">/10</span></div></div>
     <div class="slider-wrap"><div class="lbl">Energie</div><div class="slider-row"><input type="range" min="1" max="10" value="1" step="1" id="sl-energie" oninput="updSl('energie')"><span class="slider-val" id="sv-energie">1</span><span class="slider-max">/10</span></div></div>
     <div class="slider-wrap"><div class="lbl">Verdauung</div><div class="slider-row"><input type="range" min="1" max="10" value="1" step="1" id="sl-verdauung" oninput="updSl('verdauung')"><span class="slider-val" id="sv-verdauung">1</span><span class="slider-max">/10</span></div></div>
-    <button class="day-save-btn" onclick="saveEvening(this)">Abend speichern</button>
+
+    <div style="border-top:1px solid var(--bd);margin-top:14px;padding-top:14px">
+      <div class="lbl" style="margin-bottom:8px">One Week Erledigt?</div>
+      <div class="tog-row">
+        <button class="tog-btn yes" id="ow-ja-btn" onclick="togOneWeek('ja',this)">Ja</button>
+        <button class="tog-btn no" id="ow-nein-btn" onclick="togOneWeek('nein',this)">Nein</button>
+      </div>
+    </div>
+
+    <div class="journal-section">
+      <div class="journal-q-label">3-Min Journal</div>
+      <div class="journal-q" id="journal-q-fixed">Wofür bin ich heute konkret dankbar?</div>
+      <div class="journal-q-rotate" id="journal-q-rotate"></div>
+      <textarea class="inner-textarea" id="t-journal" placeholder="Schreib frei — 3 Minuten reichen." style="min-height:90px"></textarea>
+      <button class="hint-save" onclick="showJournalHistory(this)" style="margin-top:6px">Letzte Einträge</button>
+      <div id="journal-hist-list" style="display:none"></div>
+    </div>
+
+    <button class="day-save-btn" onclick="saveEvening(this)" style="margin-top:16px">Abend speichern</button>
   </div>
 
   <div class="sh">Letzte Einträge</div>
@@ -596,6 +631,7 @@ body{background:#050507}
       <button class="split-btn" onclick="selSplit('GK2',this)">Ganzkörper 2<span>Samstag</span></button>
     </div>
     <div class="sh">Übungen <span id="vol-total"></span></div>
+    <div id="timer-banner" class="timer-banner"></div>
     <div id="exercises-container"></div>
     <div class="sh">Performance & Notizen</div>
     <div class="card">
@@ -942,7 +978,28 @@ document.addEventListener('visibilitychange',()=>{
 
 
 /* ── BEEP ── */
-function beep(freq,count){try{const c=new(window.AudioContext||window.webkitAudioContext)();for(let i=0;i<count;i++){const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=freq||880;g.gain.value=0.3;o.start(c.currentTime+i*0.2);o.stop(c.currentTime+i*0.2+0.14)}}catch(e){}}
+function beep(freq,count){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const notes=[523,659,784];
+    notes.forEach((f,i)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type='sine';o.frequency.value=f;
+      g.gain.setValueAtTime(0,ctx.currentTime+i*0.28);
+      g.gain.linearRampToValueAtTime(0.35,ctx.currentTime+i*0.28+0.05);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.28+0.45);
+      o.start(ctx.currentTime+i*0.28);
+      o.stop(ctx.currentTime+i*0.28+0.5);
+    });
+  }catch(e){}
+}
+function timerDoneNotify(type){
+  navigator.vibrate&&navigator.vibrate([150,80,150,80,300]);
+  const msg=type==='side'?'Seite wechseln!':'Pause vorbei — weiter!';
+  const b=document.getElementById('timer-banner');
+  if(b){b.textContent=msg;b.classList.add('visible');setTimeout(()=>b.classList.remove('visible'),3500);}
+}
 
 /* ── REST TIMER ── */
 function startTimer(id,sec,type,onDone){
@@ -953,12 +1010,41 @@ function startTimer(id,sec,type,onDone){
   const d=el.querySelector('.rest-display');
   const fmt=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
   d.textContent=fmt(rem);
-  rests[id]=setInterval(()=>{rem--;d.textContent=fmt(rem);if(rem<=0){stopTimer(id);if(onDone)onDone()}},1000);
+  rests[id]=setInterval(()=>{rem--;d.textContent=fmt(rem);if(rem<=0){stopTimer(id);timerDoneNotify(type);if(onDone)onDone()}},1000);
 }
 function stopTimer(id){clearInterval(rests[id]);delete rests[id];const el=document.getElementById('rb-'+id);if(el){el.classList.remove('active','type-rest','type-side')}}
 
 /* ── GYM / SPLIT ── */
-function selGym(idx,btn){ST.gym=idx;localStorage.setItem('lb_gym',idx);document.querySelectorAll('.gym-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');if(ST.split)buildEx(ST.split)}
+function selGym(idx,btn){
+  ST.gym=idx;localStorage.setItem('lb_gym',idx);
+  document.querySelectorAll('.gym-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');
+  if(!ST.split)return;
+  const savedSets={};
+  Object.keys(ST.exSets).forEach(i=>{
+    const w=document.getElementById('sw-'+i);if(!w)return;
+    const sets=[];
+    w.querySelectorAll('.set-item').forEach(item=>{
+      sets.push({kg:item.querySelector('[id^="kg-"]')?.value||'',reps:item.querySelector('[id^="rp-"]')?.value||''});
+    });
+    savedSets[i]={sets,arm:ST.exSets[i]?.arm||'links'};
+  });
+  buildEx(ST.split);
+  setTimeout(()=>{
+    Object.keys(savedSets).forEach(ei=>{
+      const saved=savedSets[ei];
+      const w=document.getElementById('sw-'+ei);if(!w)return;
+      w.querySelectorAll('.set-item').forEach((item,si)=>{
+        if(!saved.sets[si])return;
+        const kgEl=item.querySelector('[id^="kg-"]');
+        const rpEl=item.querySelector('[id^="rp-"]');
+        if(kgEl&&saved.sets[si].kg){kgEl.value=saved.sets[si].kg;kgEl.classList.remove('prefilled')}
+        if(rpEl&&saved.sets[si].reps){rpEl.value=saved.sets[si].reps;rpEl.classList.remove('prefilled')}
+      });
+      if(saved.arm==='rechts')selArm(parseInt(ei),'rechts',document.getElementById('arm-r-'+ei));
+    });
+    initExerciseDots();
+  },50);
+}
 function selSplit(s,btn){ST.split=s;document.querySelectorAll('.split-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');buildEx(s)}
 
 /* ── EXERCISE DATA ── */
@@ -968,12 +1054,25 @@ function histEx(name,allGyms){const all=db().filter(e=>e.type==='training'&&(all
 function setProgLabel(name,si,kg,reps){
   const prev=lastEx(name);
   if(!prev||!prev.sets[si]||!kg||!reps)return{cls:'same',txt:'—'};
-  const lastVol=(parseFloat(prev.sets[si].kg)||0)*(parseFloat(prev.sets[si].reps)||0);
-  const curVol=(parseFloat(kg)||0)*(parseFloat(reps)||0);
-  if(!lastVol)return{cls:'same',txt:'—'};
-  if(curVol>lastVol*1.02)return{cls:'up',txt:`▲ vs ${prev.sets[si].kg}×${prev.sets[si].reps}`};
-  if(curVol<lastVol*0.98)return{cls:'down',txt:`▼ vs ${prev.sets[si].kg}×${prev.sets[si].reps}`};
-  return{cls:'same',txt:`= vs ${prev.sets[si].kg}×${prev.sets[si].reps}`};
+  const lastKg=parseFloat(prev.sets[si].kg)||0;
+  const lastReps=parseInt(prev.sets[si].reps)||0;
+  const curKg=parseFloat(kg)||0;
+  const curReps=parseInt(reps)||0;
+  if(!lastKg||!lastReps)return{cls:'same',txt:'—'};
+  const ref=`${prev.sets[si].kg}×${prev.sets[si].reps}`;
+  // Unter Mindestwdh → zu schwer
+  if(curReps<5)return{cls:'down',txt:`▼ Unter 5 Wdh · ${ref}`};
+  // Gewicht erhöht + in Range → Progression
+  if(curKg>lastKg&&curReps>=5)return{cls:'up',txt:`▲ Progression · ${ref}`};
+  // 8 Wdh erreicht (gleich/mehr Gewicht) → Decke erreicht, Gewicht erhöhen
+  if(curReps>=8)return{cls:'up',txt:`▲ 8 Wdh → nächste Session Gewicht erhöhen · ${ref}`};
+  // Mehr Wdh mit gleichem Gewicht innerhalb Range
+  if(curKg===lastKg&&curReps>lastReps)return{cls:'up',txt:`▲ +${curReps-lastReps} Wdh · ${ref}`};
+  // Letzte Session war 8 Wdh → Gewicht hätte erhöht werden sollen
+  if(lastReps>=8&&curKg<=lastKg)return{cls:'same',txt:`→ Gewicht erhöhen! Zuletzt: ${ref}`};
+  // Gewicht reduziert
+  if(curKg<lastKg)return{cls:'down',txt:`▼ Gewicht reduziert · ${ref}`};
+  return{cls:'same',txt:`= ${ref}`};
 }
 
 function onSetInput(ei,si,el){
@@ -1530,12 +1629,18 @@ function saveEvening(btn=null){
   if(!datum)return;
   const d=db();
   const existing=d.find(e=>e.type==='daily'&&e.datum===datum);
+  const owJa=document.getElementById('ow-ja-btn')?.classList.contains('sel');
+  const owNein=document.getElementById('ow-nein-btn')?.classList.contains('sel');
+  const journalText=document.getElementById('t-journal')?.value||'';
   const fields={
     stimmung:document.getElementById('sl-stimmung').value,
     energie:document.getElementById('sl-energie').value,
     verdauung:document.getElementById('sl-verdauung').value,
     koffein:getKoffeinTotal()||undefined,
     koffeinLog:koffeinLog.length?koffeinLog:undefined,
+    oneWeekDone:owJa?'ja':owNein?'nein':undefined,
+    eveningJournal:journalText||undefined,
+    journalQuestion:document.getElementById('journal-q-rotate')?.textContent||undefined,
   };
   if(existing){Object.assign(existing,fields);dbS(d);}
   else{d.unshift({id:Date.now(),type:'daily',datum,...fields});dbS(d);}
@@ -1592,7 +1697,7 @@ function saveTraining(btn=null){
     performance:document.getElementById('sl-perf').value,
     notizen:document.getElementById('t-notizen').value,
     exercises,totalVol:exercises.reduce((a,e)=>a+e.vol,0)};
-  const d=db();d.unshift(e);dbS(d);btnOk(btn);toast('Krafttraining gespeichert!');resetTraining();renderTH();updateDayRing();
+  const d=db();d.unshift(e);dbS(d);btnOk(btn);toast('Krafttraining gespeichert!');resetTraining();renderTH();updateDayRing();markTodayTrainingDone();
 }
 
 function saveCardio(btn=null){
@@ -1719,12 +1824,16 @@ function getWK(date){const d=new Date(date);const day=d.getDay();d.setDate(d.get
 /* ── RESETS ── */
 function resetDailyAbend(){
   ['schlafq','stimmung','energie','verdauung'].forEach(id=>{const el=document.getElementById('sl-'+id);if(el){el.value=1;updSl(id)}});
+  document.querySelectorAll('#ow-ja-btn,#ow-nein-btn').forEach(b=>b.classList.remove('sel'));
+  const _j=document.getElementById('t-journal');if(_j)_j.value='';
   document.querySelectorAll('#swipe-container .view:first-child .tog-btn').forEach(b=>b.classList.remove('sel'));
   ST.toggles={};
 }
 function resetDaily(){
   ['d-gewicht','d-schlaf'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   ['schlafq','stimmung','energie','verdauung'].forEach(id=>{const el=document.getElementById('sl-'+id);if(el){el.value=1;updSl(id)}});
+  document.querySelectorAll('#ow-ja-btn,#ow-nein-btn').forEach(b=>b.classList.remove('sel'));
+  const _j2=document.getElementById('t-journal');if(_j2)_j2.value='';
   document.querySelectorAll('#swipe-container .view:first-child .tog-btn').forEach(b=>b.classList.remove('sel'));
   ST.toggles={};
   document.getElementById('d-datum').value=today();
@@ -1756,6 +1865,10 @@ function loadDailyEdit(id){
   if(e.stimmung){document.getElementById('sl-stimmung').value=e.stimmung;updSl('stimmung')}
   if(e.energie){document.getElementById('sl-energie').value=e.energie;updSl('energie')}
   if(e.verdauung){document.getElementById('sl-verdauung').value=e.verdauung;updSl('verdauung')}
+  // One Week + Journal
+  const owJa=document.getElementById('ow-ja-btn');const owNein=document.getElementById('ow-nein-btn');
+  if(owJa&&owNein){owJa.classList.remove('sel');owNein.classList.remove('sel');if(e.oneWeekDone==='ja')owJa.classList.add('sel');else if(e.oneWeekDone==='nein')owNein.classList.add('sel');}
+  const jEl=document.getElementById('t-journal');if(jEl)jEl.value=e.eveningJournal||'';
   dbS(db().filter(x=>x.id!==id));
   goTab(0);
   toast('Eintrag geladen — bearbeiten & neu speichern');
@@ -1780,6 +1893,8 @@ function renderDH(){
           ${e.koffein?`<div class="dh-kv"><span class="dh-k">Koffein</span><span class="dh-v">${e.koffein}mg</span></div>`:''}
           ${e.energie?`<div class="dh-kv"><span class="dh-k">Energie</span><span class="dh-v">${e.energie}/10</span></div>`:''}
           ${e.verdauung?`<div class="dh-kv"><span class="dh-k">Verdauung</span><span class="dh-v">${e.verdauung}/10</span></div>`:''}
+          ${e.oneWeekDone?`<div class="dh-kv"><span class="dh-k">One Week</span><span class="dh-v" style="color:${e.oneWeekDone==='ja'?'var(--okl)':'var(--errl)'}">${e.oneWeekDone==='ja'?'Ja ✓':'Nein'}</span></div>`:''}
+          ${e.eveningJournal?`<div style="grid-column:1/-1;margin-top:6px"><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--gold);margin-bottom:3px">JOURNAL</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--txm);line-height:1.5;white-space:pre-wrap">${e.eveningJournal}</div></div>`:''}
           <div style="grid-column:1/-1;display:flex;gap:6px;margin-top:4px">
             <button class="del-btn" style="font-size:10px;padding:3px 8px" onclick="event.stopPropagation();delE(${e.id})">Löschen</button>
             <button class="del-btn" style="font-size:10px;padding:3px 8px;border-color:var(--goldd);color:var(--goldd)" onclick="event.stopPropagation();loadDailyEdit(${e.id})">Bearbeiten</button>
@@ -1959,6 +2074,10 @@ function loadTodayEntry(silent=false){
   if(e.verdauung){document.getElementById('sl-verdauung').value=e.verdauung;updSl('verdauung');}
   if(e.koffeinLog){koffeinLog=e.koffeinLog;}else if(e.koffein){koffeinLog=[{name:'Geladen',mg:parseFloat(e.koffein)||0,time:Date.now()}];}else{koffeinLog=[];}
   updateKoffeinUI();
+  // One Week + Journal
+  const _owJa=document.getElementById('ow-ja-btn');const _owNein=document.getElementById('ow-nein-btn');
+  if(_owJa&&_owNein){_owJa.classList.remove('sel');_owNein.classList.remove('sel');if(e.oneWeekDone==='ja')_owJa.classList.add('sel');else if(e.oneWeekDone==='nein')_owNein.classList.add('sel');}
+  const _jEl=document.getElementById('t-journal');if(_jEl)_jEl.value=e.eveningJournal||'';
   document.querySelectorAll('#swipe-container .view:first-child .tog-btn').forEach(b=>b.classList.remove('sel'));
   ST.toggles={};
   if(!silent)goTab(0);
@@ -1987,13 +2106,14 @@ function renderCIStats(){
   const cardioDiff=cardioThis-cardioLast;
   const cardioColor=cardioThis>=120?'var(--okl)':cardioThis>=80?'var(--warnl)':'var(--errl)';
 
-  const trendArrow=diff?`<span style="font-size:13px;color:${parseFloat(diff)>0?'var(--errl)':'var(--okl)'}">${parseFloat(diff)>0?'↑':'↓'}${Math.abs(parseFloat(diff))}kg vs VW</span>`:'';
+  const isSunday=new Date().getDay()===0;
+  const trendArrow=isSunday&&diff?`<span style="font-size:13px;color:${parseFloat(diff)>0?'var(--errl)':'var(--okl)'}">${parseFloat(diff)>0?'↑':'↓'}${Math.abs(parseFloat(diff))}kg vs VW</span>`:'';
   const koffData=calcWkKoffein(today());
   const koffAll=calcKoffeinAllTime();
   const koffBox=koffData?`<div class="stat-box" style="grid-column:1/-1"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="stat-val" style="color:${koffData.over.length?'var(--errl)':koffData.avg>=400?'var(--gold)':'var(--okl)'}">${koffData.avg}</div><div class="stat-lbl">Ø Koffein mg / Tag</div></div>${koffData.over.length?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--errl);text-align:right">⚠ &gt;400mg:<br>${koffData.over.join(', ')}</div>`:''}</div></div>`:'';
   document.getElementById('ci-stats').innerHTML=`
-    <div class="stat-box"><div class="stat-val">${wA||'—'}</div><div class="stat-lbl">Ø Gewicht kg</div>${trendArrow?`<div style="font-family:'DM Mono',monospace;font-size:9px;margin-top:3px">${trendArrow}</div>`:''}</div>
-    <div class="stat-box"><div class="stat-val" style="color:${cardioColor}">${cardioThis}</div><div class="stat-lbl">Cardio min / Woche</div></div>
+    <div class="stat-box stat-box-tap" onclick="openWkHistModal('weight')"><div class="stat-val">${wA||'—'}</div><div class="stat-lbl">Ø Gewicht kg</div>${trendArrow?`<div style="font-family:'DM Mono',monospace;font-size:9px;margin-top:3px">${trendArrow}</div>`:''}${!isSunday?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:8px;letter-spacing:1px;color:var(--txd);margin-top:2px">Verlauf ▾</div>`:''}</div>
+    <div class="stat-box stat-box-tap" onclick="openWkHistModal('cardio')"><div class="stat-val" style="color:${cardioColor}">${cardioThis}</div><div class="stat-lbl">Cardio min / Woche</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:8px;letter-spacing:1px;color:var(--txd);margin-top:2px">Verlauf ▾</div></div>
     ${koffBox}`;
 
   const koffWkColor=koffData?(koffData.avg>400?'var(--errl)':koffData.avg>=400?'var(--gold)':'var(--okl)'):'var(--txm)';
@@ -2004,8 +2124,10 @@ function renderCIStats(){
     ${energie?`<div class="hkv"><span class="k" style="margin-bottom:3px;display:block">Ø Energie</span><span class="v">${energie}/10</span></div>`:''}
     ${stimmung?`<div class="hkv"><span class="k" style="margin-bottom:3px;display:block">Ø Stimmung</span><span class="v">${stimmung}/10</span></div>`:''}
     ${verdauung?`<div class="hkv"><span class="k" style="margin-bottom:3px;display:block">Ø Verdauung</span><span class="v">${verdauung}/10</span></div>`:''}
-    <div class="hkv"><span class="k" style="margin-bottom:3px;display:block">Cardio vs VW</span><span class="v" style="color:${cardioDiff>=0?'var(--okl)':'var(--errl)'}">${cardioDiff>=0?'+':''}${cardioDiff} min</span></div>
+    ${isSunday?`<div class="hkv"><span class="k" style="margin-bottom:3px;display:block">Cardio vs VW</span><span class="v" style="color:${cardioDiff>=0?'var(--okl)':'var(--errl)'}">${cardioDiff>=0?'+':''}${cardioDiff} min</span></div>`:''}
   </div>
+  ${isSunday?`<div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.04)"><div style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:3px;color:var(--gold);margin-bottom:8px">Wochenabschluss — Vergleich zur Vorwoche</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${wA&&diff?`<div class="hkv"><span class="k" style="margin-bottom:3px;display:block">Gewicht</span><span class="v" style="color:${parseFloat(diff)>0?'var(--errl)':'var(--okl)'}">${parseFloat(diff)>0?'+':''}${diff}kg</span></div>`:''}${cardioThis||cardioLast?`<div class="hkv"><span class="k" style="margin-bottom:3px;display:block">Cardio</span><span class="v" style="color:${cardioDiff>=0?'var(--okl)':'var(--errl)'}">${cardioDiff>=0?'+':''}${cardioDiff} min</span></div>`:''}</div></div>`:''}
+
   ${koffData?`<div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.04)">
     <div class="sh-inner" style="margin-top:0">Koffein</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -2590,6 +2712,80 @@ function initTodayPlan(){
   if(banner)banner.style.borderColor=isTraining?'var(--goldd)':'var(--bd)';
   if(badge){badge.textContent=isTraining?'GEPLANT':'RUHETAG';badge.style.color=isTraining?'var(--gold)':'var(--txm)';}
   ST._todaySplit=splitMap[d]||null;
+  if(isTraining&&db().some(e=>e.type==='training'&&e.datum===today()))markTodayTrainingDone();
+}
+
+/* ── TRAINING ERLEDIGT ── */
+function markTodayTrainingDone(){
+  const badge=document.getElementById('today-plan-badge');
+  const banner=document.getElementById('today-plan-banner');
+  if(badge){badge.textContent='ERLEDIGT';badge.style.color='var(--okl)';}
+  if(banner)banner.style.borderColor='var(--ok)';
+}
+
+/* ── ONE WEEK TOGGLE ── */
+function togOneWeek(v,btn){
+  const was=btn.classList.contains('sel');
+  document.querySelectorAll('#ow-ja-btn,#ow-nein-btn').forEach(b=>b.classList.remove('sel'));
+  if(!was)btn.classList.add('sel');
+}
+
+/* ── WOCHENVERLAUF MODAL ── */
+function openWkHistModal(type){
+  const isWeight=type==='weight';
+  const label=isWeight?'Ø Gewicht / Woche':'Cardio min / Woche';
+  document.getElementById('wk-hist-label').textContent=label;
+  const rows=[];
+  for(let i=0;i<8;i++){
+    const d=new Date();d.setDate(d.getDate()-i*7);
+    const ds=d.toISOString().split('T')[0];
+    const mon=getMondayOfWeek(new Date(ds));
+    const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+    const monStr=`${String(mon.getDate()).padStart(2,'0')}.${String(mon.getMonth()+1).padStart(2,'0')}`;
+    const sunStr=`${String(sun.getDate()).padStart(2,'0')}.${String(sun.getMonth()+1).padStart(2,'0')}`;
+    const val=isWeight?calcWkAvg('gewicht',ds):calcWkCardio(ds);
+    const prev=i<7?(isWeight?calcWkAvg('gewicht',new Date(d.getTime()-7*24*60*60*1000).toISOString().split('T')[0]):null):null;
+    const hasVal=isWeight?(val!==null):(val>0);
+    const diff=isWeight&&val&&prev?(parseFloat(val)-parseFloat(prev)).toFixed(1):null;
+    const diffColor=isWeight&&diff?(parseFloat(diff)>0?'var(--errl)':'var(--okl)'):'';
+    rows.push(`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--txm)">${monStr}–${sunStr}${i===0?' <span style="color:var(--gold);font-size:8px">DIESE</span>':''}</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        ${diff?`<span style="font-family:'DM Mono',monospace;font-size:9px;color:${diffColor}">${parseFloat(diff)>0?'+':''}${diff}kg</span>`:''}
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:${hasVal?'var(--tx)':'var(--txd)'}">${hasVal?(isWeight?val+'kg':val+' min'):'—'}</span>
+      </div>
+    </div>`);
+  }
+  document.getElementById('wk-hist-body').innerHTML=rows.join('');
+  document.getElementById('wk-hist-modal-bg').classList.add('open');
+}
+function closeWkHistModal(){document.getElementById('wk-hist-modal-bg').classList.remove('open');}
+
+/* ── JOURNAL FRAGEN ── */
+const JOURNAL_ROTATING=[
+  'Was hat mich heute angetrieben?',
+  'Wem bin ich dankbar — und warum konkret?',
+  'Was hat heute besser geklappt als erwartet?',
+  'Welche heutige Herausforderung war eigentlich eine Chance?',
+  'Was nehme ich aus dieser Woche als Stärke mit?',
+  'Worauf bin ich heute stolz — groß oder klein?',
+  'Was möchte ich morgen bewusst anders machen?',
+];
+function initJournalQuestion(){
+  const d=new Date().getDay();
+  const rotQ=JOURNAL_ROTATING[d];
+  const el=document.getElementById('journal-q-rotate');
+  if(el)el.textContent=rotQ;
+}
+function showJournalHistory(btn){
+  const listEl=document.getElementById('journal-hist-list');
+  if(!listEl)return;
+  if(listEl.style.display==='block'){listEl.style.display='none';if(btn)btn.textContent='Letzte Einträge';return;}
+  const entries=db().filter(e=>e.type==='daily'&&e.eveningJournal).slice(0,5);
+  if(!entries.length){listEl.innerHTML='<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:11px;color:var(--txd);padding:6px 0">Noch keine Journal-Einträge</div>';listEl.style.display='block';if(btn)btn.textContent='Schließen';return;}
+  listEl.innerHTML=entries.map(e=>`<div class="journal-hist-entry"><div class="journal-hist-date">${fmtDate(e.datum)}${e.journalQuestion?' · '+e.journalQuestion:''}</div>${e.eveningJournal}</div>`).join('');
+  listEl.style.display='block';
+  if(btn)btn.textContent='Schließen';
 }
 
 function init(){
@@ -2607,6 +2803,7 @@ function init(){
   loadKoffeinLog();
   initDailyQuote();
   initDailyTakeaway();
+  initJournalQuestion();
   updateHeroNumbers();
   updateDayRing();
   initTodayPlan();
@@ -2738,6 +2935,15 @@ function initHealth(){
     <span class="tab-lbl">Check-in</span>
   </button>
 </nav>
+
+<!-- Wochenverlauf-Modal (Gewicht / Cardio) -->
+<div class="ta-modal-bg" id="wk-hist-modal-bg" onclick="closeWkHistModal()">
+  <div class="ta-modal" onclick="event.stopPropagation()" style="border-top-color:rgba(201,168,76,0.25)">
+    <div class="ta-modal-label" style="color:var(--goldd)" id="wk-hist-label">Wochenverlauf</div>
+    <div id="wk-hist-body"></div>
+    <div class="ta-modal-close">— antippen zum Schließen —</div>
+  </div>
+</div>
 
 <!-- Gewicht-Verlauf-Modal -->
 <div class="ta-modal-bg" id="gew-modal-bg" onclick="closeGewichtModal()">
