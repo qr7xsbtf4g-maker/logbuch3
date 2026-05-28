@@ -1353,14 +1353,15 @@ function setProgLabel(name,si,kg,reps){
   const curReps=parseInt(reps)||0;
   if(!lastKg||!lastReps)return{cls:'same',txt:'—'};
   const ref=`${prev.sets[si].kg}×${prev.sets[si].reps}`;
+  const rule=(n,label)=>`<span style="font-family:'Geist Mono',monospace;font-size:8px;font-weight:700;letter-spacing:0.5px;padding:1px 5px;border-radius:3px;background:var(--goldf);color:var(--goldd);border:1px solid rgba(200,100,60,0.2);vertical-align:middle;white-space:nowrap">R${n} ${label}</span>`;
   // Unter Mindestwdh → zu schwer
   if(curReps<5)return{cls:'down',txt:`▼ Unter 5 Wdh · ${ref}`};
-  // Gewicht erhöht + in Range → Progression
-  if(curKg>lastKg&&curReps>=5)return{cls:'up',txt:`▲ Progression · ${ref}`};
-  // 8 Wdh erreicht (gleich/mehr Gewicht) → Decke erreicht, Gewicht erhöhen
-  if(curReps>=8)return{cls:'up',txt:`▲ 8 Wdh → nächste Session Gewicht erhöhen · ${ref}`};
-  // Mehr Wdh mit gleichem Gewicht innerhalb Range
-  if(curKg===lastKg&&curReps>lastReps)return{cls:'up',txt:`▲ +${curReps-lastReps} Wdh · ${ref}`};
+  // Gewicht erhöht + in Range → Progression (Regel 2: Last-Progression)
+  if(curKg>lastKg&&curReps>=5)return{cls:'up',txt:`▲ Progression · ${ref} ${rule(2,'+kg')}`};
+  // 8 Wdh erreicht → Decke, Gewicht erhöhen (Regel 3: 8er-Decke)
+  if(curReps>=8)return{cls:'up',txt:`▲ 8 Wdh → Gewicht erhöhen · ${ref} ${rule(3,'8er')}`};
+  // Mehr Wdh mit gleichem Gewicht (Regel 1: Wdh-Progression)
+  if(curKg===lastKg&&curReps>lastReps)return{cls:'up',txt:`▲ +${curReps-lastReps} Wdh · ${ref} ${rule(1,'+Wdh')}`};
   // Letzte Session war 8 Wdh → Gewicht hätte erhöht werden sollen
   if(lastReps>=8&&curKg<=lastKg)return{cls:'same',txt:`→ Gewicht erhöhen! Zuletzt: ${ref}`};
   // Gewicht reduziert
@@ -1405,7 +1406,7 @@ function initExerciseDots(){
       const dot=document.getElementById(`pd-${ei}-${si}`);
       const txt=document.getElementById(`pt-${ei}-${si}`);
       if(dot)dot.className='prog-dot '+p.cls;
-      if(txt){txt.textContent=p.txt;txt.style.color=p.cls==='up'?'var(--okl)':p.cls==='down'?'var(--errl)':'var(--txm)';}
+      if(txt){txt.innerHTML=p.txt;txt.style.color=p.cls==='up'?'var(--okl)':p.cls==='down'?'var(--errl)':'var(--txm)';}
     });
     calcVol(ei);
   });
@@ -1438,7 +1439,7 @@ function updateSetProg(ei,si){
   const dot=document.getElementById(`pd-${ei}-${si}`);
   const txt=document.getElementById(`pt-${ei}-${si}`);
   if(dot){dot.className='prog-dot '+p.cls}
-  if(txt){txt.textContent=p.txt;txt.style.color=p.cls==='up'?'var(--okl)':p.cls==='down'?'var(--errl)':'var(--txm)'}
+  if(txt){txt.innerHTML=p.txt;txt.style.color=p.cls==='up'?'var(--okl)':p.cls==='down'?'var(--errl)':'var(--txm)'}
   calcVol(ei);
   if(kg&&rp){
     const id=`${ei}-${si}`;
