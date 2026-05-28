@@ -18,7 +18,7 @@
 html{background-color:#E8E3D8}
 html,body{height:100%;overflow:hidden;color:var(--tx);font-family:'Geist',sans-serif;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
 body{background:#E8E3D8}
-#app-frame{height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+#app-frame{height:100vh;height:100dvh;height:-webkit-fill-available;display:flex;flex-direction:column;overflow:hidden}
 #swipe-container{flex:1;min-height:0;overflow:hidden}
 
 /* SPLASH */
@@ -3413,7 +3413,11 @@ function confirmSwap(ei,name,muscle){
   toast('→ '+name);
 }
 
+function fixVH(){const f=document.getElementById('app-frame');if(f)f.style.height=window.innerHeight+'px';}
+window.addEventListener('resize',fixVH,{passive:true});
+
 function init(){
+  fixVH();
   localStorage.removeItem('lb_rest_bg');
   const days=['So','Mo','Di','Mi','Do','Fr','Sa'];
   const months=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
