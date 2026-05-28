@@ -18,13 +18,13 @@
 html{background-color:#E8E3D8}
 html,body{height:100%;overflow:hidden;color:var(--tx);font-family:'Geist',sans-serif;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
 body{background:#E8E3D8;display:flex;flex-direction:column}
-#app-frame{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+#app-frame{flex:1;min-height:0;display:flex;flex-direction:column}
 #swipe-container{flex:1;min-height:0;overflow:hidden}
 
 /* SPLASH */
 #splash{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
 #splash.out{opacity:0;pointer-events:none;transition:opacity .4s ease}
-.splash-title{font-family:'Geist',sans-serif;font-weight:700;font-size:72px;letter-spacing:8px;color:#fff;line-height:1;text-align:center}
+.splash-title{font-family:'Geist',sans-serif;font-weight:700;font-size:min(72px,15vw);letter-spacing:min(8px,1.5vw);color:#fff;line-height:1;text-align:center}
 .splash-name{font-family:'Geist',sans-serif;font-size:13px;font-weight:300;letter-spacing:6px;color:var(--gold);text-transform:uppercase;margin:8px 0 48px;text-align:center}
 .splash-divider{width:60px;height:1px;background:var(--goldd);margin:0 auto 48px}
 .splash-sub{font-family:'Geist',sans-serif;font-weight:700;font-size:28px;letter-spacing:6px;color:#fff;opacity:.15;text-align:center}
@@ -284,8 +284,8 @@ body{background:#E8E3D8;display:flex;flex-direction:column}
 #splash{overflow:hidden}
 .splash-title{animation:splashTitleIn .45s ease forwards}
 @keyframes splashTitleIn{
-  from{opacity:0;transform:translateY(18px);letter-spacing:8px}
-  to{opacity:1;transform:none;letter-spacing:2px}}
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:none}}
 .splash-name{animation:splashFadeIn .35s ease .1s both}
 .splash-sub{animation:splashFadeIn .35s ease .2s both}
 @keyframes splashFadeIn{from{opacity:0}to{opacity:inherit}}
@@ -443,10 +443,10 @@ body{background:#E8E3D8;display:flex;flex-direction:column}
 .lsh-prog-up{color:var(--okl)}
 .lsh-prog-down{color:var(--errl)}
 
-/* ── Splash behält etwas mehr Spacing (bewusster Effekt) ── */
-.splash-title{letter-spacing:2px}
-.splash-name{letter-spacing:3px}
-.splash-sub{letter-spacing:3px}
+/* ── Splash ── */
+.splash-title{letter-spacing:min(2px,0.4vw)}
+.splash-name{letter-spacing:min(3px,0.8vw)}
+.splash-sub{letter-spacing:min(3px,0.8vw)}
 /* ── Badges: kleines Tracking bleibt lesbar ── */
 .badge{letter-spacing:0.06em}
 .day-save-btn{letter-spacing:0}
