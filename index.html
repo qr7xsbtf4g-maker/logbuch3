@@ -17,8 +17,8 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{background-color:#E8E3D8}
 html,body{height:100%;overflow:hidden;color:var(--tx);font-family:'Geist',sans-serif;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
-body{background:#E8E3D8;display:flex;flex-direction:column}
-#app-frame{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+body{background:#E8E3D8}
+#app-frame{height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 #swipe-container{flex:1;min-height:0;overflow:hidden}
 
 /* SPLASH */
@@ -522,7 +522,7 @@ body{background:#E8E3D8;display:flex;flex-direction:column}
   body{background:var(--bg);display:flex;flex-direction:row;align-items:stretch}
 
   #app-frame{
-    flex:1;min-width:0;
+    height:auto;flex:1;min-width:0;
     display:grid;
     grid-template-columns:190px 1fr;
     grid-template-rows:auto 1fr;
