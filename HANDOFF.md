@@ -3,7 +3,7 @@
 ## Aktueller Stand
 
 **Datei:** `/Users/djoker/Claude/Claude/Projects/Projekt Dashboard CC/index.html`  
-**Zeilen:** ~3533  
+**Zeilen:** ~3647  
 **Git:** Ja — remote auf GitHub, GitHub Pages aktiv  
 **Branch:** `main`  
 **Syntaxcheck:** `node --check <(sed -n '/<script>/,/<\/script>/p' index.html | sed '1d;$d')`
@@ -20,102 +20,99 @@
 
 ---
 
-## Was in der letzten Session erledigt wurde (27. Mai 2026)
+## Was in der letzten Session erledigt wurde (28. Mai 2026)
 
-### Wochenring + Statistik-Charts + UX
+### Layout-Fixes (iOS Safari)
 
-- **7-Segment Wochenring** (Mon–So) ersetzt alten Task-Ring — jeder Tag ein Arc; Grün = Training erledigt, Terracotta = Daily-only, dim = nichts; heute-Segment fetter + Glow; Zahl `x/7` im Zentrum
-- **4 neue Statistik-Charts** im Weekly-Tab (nach Gewichtsverlauf):
-  - Wohlbefinden: Schlafq. (lila) + Energie (terracotta), dual-line
-  - Performance: Balken, überdurchschnittliche Tage volle Farbe
-  - Zone 2 Cardio: Watt (blau, linke Achse) + Ø HF gestrichelt (terracotta, rechte Achse)
-  - Sätze/Muskelgruppe: horizontal bar, aktuelle vs. Vorwoche
-- **Umfang-Felder Check-in geändert:** Nabel→Bauch (`u_nabel`), Taille→Oberarm (`u_oberarm`), Hüfte→Oberschenkel (`u_oberschenkel`) — Feld-Keys + History + PDF-Export aktualisiert
-- **Sätze/Woche/Muskelgruppe im Weekly-Tab** — kleine Chip-Reihe in `wbs-daily` und im Check-in (`ci-muscle-checkin`)
-- **Einheit-Muskel-Summary im Training-Tab** — Chips zeigen Sätze je Muskelgruppe für aktuelle Session (`session-muscle-sum`)
-- **PLAN-Muskelgruppen präzisiert:**
-  - `'Posterior'` → `'Hamstrings'` (alle 3 Gyms)
-  - `'Rücken'` → `'Lats'` (Pulldown-Varianten) / `'Oberer Rücken'` (Row-Varianten, Hammer Strength High Row) — web-recherchiert
-- **UX #1 — Exercise-Completion-Badge:** `x/y` Chips bei jedem Übungsblock, partial=terracotta, done=grün, via `updateExDone(ei)` in `onSetInput()`
-- **UX #2 — Weekly Quick Score:** 3 immer sichtbare Kacheln im Weekly-Tab (Einheiten, Ø Perf, Ø Schlafq.)
-- **UX #3 — Hero-Gewicht direktsprung:** `heroGewichtTap()` — kein Gewicht eingetragen → scrollt zu Eingabe; bereits eingetragen → öffnet History-Modal
-- **UX #4 — Zone 2 HF-Hint:** inline im Cardio-HF-Label, berechnet aus Geburtsdatum 1998-06-07 — aktuell „Zone 2: 125–145"
-- **Illness-Stack mobil erreichbar:** 40px Spacer am Ende des Health-Tabs
+- **Tab-Bar:** `position:fixed` entfernt → `flex-shrink:0` als normales Flex-Kind am Ende von `#app-frame`. Löst das iOS-Safari-Problem mit der schwebenden Tab-Bar dauerhaft.
+- **`#app-frame`:** `height:100%; display:flex; flex-direction:column; overflow:hidden` — kein `position:fixed`, kein `position:relative` (verhinderte früher korrekte Fixed-Positionierung von Kindern auf iOS)
+- **`body`:** kein `display:flex` mehr auf Mobile — verhinderte korrekte Viewport-Höhen-Berechnung
+- **View `padding-bottom`:** 142px → 16px (Tab-Bar ist jetzt im Fluss, kein Overlay mehr)
+- **Splash-Screen:** `font-size: min(72px, 15vw)` — skaliert auf iPhone-Größe; Safe-Area-Padding damit Inhalt nicht in Dynamic Island ragt; Animations-Letter-Spacing entfernt (verursachte Overflow)
 
-### Foundation Design System — vollständige Transformation
+### Mac Desktop Layout (`@media min-width: 768px`)
 
-- Dark-Gold-Theme → Light-Cream-Theme nach Foundation Design System (Apple × Uber × Claude)
-- **Farben:** `--bg:#E8E3D8` (dunkles Cream), `--gold:#C8643C` (Terracotta), `--tx:#0F0F0E`, `--txm:#4D4B45`
-- **Fonts:** Bebas Neue → Geist 700, Barlow Condensed → Geist, DM Mono → Geist Mono; Instrument Serif italic für Editorial-Momente
-- Foundation Letter-Spacing Override CSS-Block (Geist braucht keine weiten Abstände)
-- Hero-Strip: dunkles `#0F0F0E` Panel mit Radial-Gradient-Glow (Terracotta), Ring darin, KPI 2×2 Grid darunter
-- Editorial-Block: Instrument Serif italic für Tages-Impuls-Quote, bold-fix für Takeaway-Text
+- **Volle Browserbreite** — kein zentriertes Card-Layout mehr, `#app-frame` nimmt `flex:1`
+- **CSS Grid:** `190px sidebar | 1fr content`, `auto nav | 1fr content-row`
+- **Sidebar:** Tab-Bar wird zur linken Navigationsspalte; DJI-Logo via `::before`; Tab-Buttons horizontal (Icon + Text linksbündig)
+- **Nav:** nur in der Content-Spalte (`grid-column:2`)
+- **Hover-Effekte:** Cards, Gym-Buttons, Supp-Items, Tab-Buttons
+- **Modals:** zentrierte Dialoge (nicht Bottom-Sheet) auf Desktop
 
-### UX-Verbesserungen
+### Fortschrittsfotos: 3 Typen
 
-- **Apple Health + Löschen:** Nebeneinander als Ghost-Buttons (50/50), nicht mehr im Fokus
-- **Performance-Slider:** Startet immer auf 1 (war: 7) — zwingt zum bewussten Eintragen
-- **Check-in Redesign:** Datum + KFA auf einer Zeile, Umfänge als inline KPI-Input-Cards, Fotos im 3:4-Format
-- **Sonntags-Backup-Banner:** Wöchentliche Erinnerung im Weekly-Tab — Export-Button + Dismiss (wird nicht wieder angezeigt bis nächsten Sonntag, `lbv4_backup_dismissed` Key)
+- **Neues Layout:** 3×2-Grid — Spalten = Front / Seite / Back, Reihen = Vorwoche (readonly) / Diese Woche (Upload)
+- **Storage-Format:** `ph[weekKey] = {front, side, back}` statt einzelnem String
+- **Rückwärtskompatibilität:** alter String-Wert wird als `front` interpretiert
+- **`loadPhotos()`** ersetzt `loadPrevPhoto()` — lädt alle 3 Typen für beide Wochen
+- **`loadPhoto(input, type)`** — type-aware Upload (`'front'`/`'side'`/`'back'`)
+- **`saveCheckin()`** — merged neue Fotos mit bestehenden (kein Überschreiben unbefüllter Slots)
+- **Check-in-Verlauf:** zeigt jetzt z.B. "3 Fotos" statt nur "Foto"
 
-### Plan-Änderung
+### Training-Tab
 
-- **GK1 Trizeps:** Alle Gyms → `Polquin Extensions Unilateral`
+- **Performance → Trainingsqualität** — Label im Training-Tab + Chart-Header im Weekly-Tab; Datenschlüssel `performance` unverändert (Bestandsdaten erhalten)
+- **Progressive Overload Regel-Badges:** `setProgLabel()` zeigt jetzt inline welche Regel greift:
+  - `R1 +Wdh` — gleich Gewicht, mehr Wiederholungen
+  - `R2 +kg` — Gewicht erhöht bei ≥5 Wdh
+  - `R3 8er` — 8-Wdh-Decke erreicht, nächste Session Gewicht erhöhen
+- **Startbein statt Startarm** für Beinübungen — `isLegMuscle(muscle)` prüft Hamstrings/Quads/Waden/Adduktoren/Glutes
+- **`isUnilateral()`** erkennt jetzt auch `Kurzhantel` (ausgeschrieben) und `Preacher` (immer unilateral)
+- **Seitheben Maschine** zur Exercise-DB für JoyFitness (Index 1) hinzugefügt — via manuelle Seed-Liste in `initExDB()`
 
-### Übungsdatenbank + Session-Swap
+### Spacing
 
-- Neuer localStorage-Key `lbv4_exdb` — speichert `{name: muscle}` für alle bekannten Übungen
-- `initExDB()`: scannt beim App-Start alle PLAN-Übungen (alle 3 Gym-Varianten), trägt neue automatisch ein
-- `addToExDB(name, muscle)`: fügt einzelne Übung hinzu — wird z.B. beim Swap aufgerufen
-- **⇄-Button** in jedem Übungsblock (gold, neben ↑↓) → öffnet Swap-Modal
-- **Swap-Modal** (Bottom-Sheet): zeigt aktuellen Übungsnamen + Muskelgruppe, Suchfeld, sortierte Liste (gleiche Muskelgruppe zuerst → dann Rest alphabetisch)
-- `confirmSwap(ei, name, muscle)`: wechselt Übung, behält eingetragene Satz-Werte + Startarm, übersteht auch ↑↓-Reorder
-- Swap-State (`ST.swapOverrides`) wird beim Split-Wechsel zurückgesetzt
+- `card margin-bottom`: 14px → 10px (alle Karten inkl. inline-Styles)
+- `card padding`: 16px → 14px / 14px → 12px
+- `view padding-top`: 16px → 12px
+- `nav padding-top` extra: +10px → +6px, `nav-top margin-bottom`: 10px → 6px
 
 ---
 
-## Was in der vorletzten Session erledigt wurde (Mai 2026)
+## Was in der vorletzten Session erledigt wurde (27. Mai 2026)
 
-### Bug-Fix: Gym-Wechsel löscht Training-Inputs
-- `selGym()` speichert jetzt alle Set-Inputs (kg + reps) vor dem `buildEx()`-Rebuild
-- Nach dem Rebuild werden die Werte wiederhergestellt (identisch zu `moveEx`)
+### Wochenring + Statistik-Charts + UX
 
-### Timer-Signal: 3-Ton-Chime + visuelles Banner
-- `beep()`: aufsteigendes C5–E5–G5 Sinus-Chime mit Envelope
-- `timerDoneNotify(type)`: Vibration + gold Banner `#timer-banner` oben im Viewport
+- **7-Segment Wochenring** (Mon–So) ersetzt alten Task-Ring
+- **4 neue Statistik-Charts** im Weekly-Tab (Wohlbefinden, Performance/Trainingsqualität, Zone 2 Cardio, Sätze/Muskelgruppe)
+- **Umfang-Felder:** Bauch (`u_nabel`), Oberarm (`u_oberarm`), Oberschenkel (`u_oberschenkel`)
+- **PLAN-Muskelgruppen präzisiert:** Posterior→Hamstrings, Rücken→Lats/Oberer Rücken
+- **UX:** Exercise-Completion-Badge, Weekly Quick Score, Hero-Gewicht-Direktsprung, Zone 2 HF-Hint
 
-### Progressive Overload: 5–8 Wiederholungs-Regel
-- `setProgLabel()` nach Dustins Regel: ▼ <5 Wdh, ▲ Gewicht+≥5 Wdh, ▲ 8 Wdh erreicht, ▲ gleiche kg mehr Wdh, → 8 Wdh Vorwoche kein Aufschlag, ▼ Gewicht reduziert
+### Foundation Design System
 
-### Check-in: Wochenverlauf-Modal + Sonntag-Only-Vergleich
-- Gewicht- und Cardio-Stat-Box → Modal mit letzten 8 Wochen
-- Vergleich "vs. Vorwoche" nur sonntags sichtbar
+- Light-Cream-Theme: `--bg:#E8E3D8`, `--gold:#C8643C`, Geist-Fonts, Hero-Strip `#0F0F0E`
 
-### Training-Tab: ERLEDIGT Badge
-- Nach `saveTraining()` → Badge "GEPLANT" → "ERLEDIGT" (grün)
+### Übungsdatenbank + Session-Swap
 
-### Abend-Karte: One Week + 3-Min Journal
-- Ja/Nein Toggle `oneWeekDone`
-- Täglich rotierende Journalfrage + Textarea → speichert `eveningJournal` + `journalQuestion`
-- "Letzte Einträge"-Button zeigt letzte 5 inline
+- `lbv4_exdb`: `{name: {muscle, gyms:[...]}}` — Gym-Index-aware
+- Swap-Modal (Bottom-Sheet) mit Suchfeld, Muskelgruppe-Sortierung
+- `confirmSwap(ei, name, muscle)`: wechselt Übung, behält Satz-Werte + Startarm/bein
 
 ---
 
 ## Frühere Sessions (Zusammenfassung)
 
-### UX
-- **Tages-Completion Ring** — 4 Aufgaben à 25% (Morgen, Supps, Training, Abend), gold → grün bei 100%
-- **Split-Banner** im Training-Tab — Wochentag, Einheit, GEPLANT/RUHETAG/ERLEDIGT Badge
-- **Gewicht-History-Modal** — letzte 7 Tage mit Delta (antippen auf Gewicht im Hero)
-- Koffein-Log mit Preset-Buttons + Custom-Eingabe + Undo/Reset
+- Gym-Wechsel-Bug behoben (Inputs bleiben erhalten)
+- Timer-Chime (C5–E5–G5) + visuelles Banner
+- Progressive Overload 5–8-Wiederholungs-Regel (`setProgLabel`)
+- ERLEDIGT-Badge nach `saveTraining()`
+- Abend-Journal mit rotierenden Fragen
+- Tages-Completion Ring, Split-Banner, Gewicht-History-Modal, Koffein-Log
 
-### Daten / Storage
-- **localStorage-Keys:** `lbv4` (Daily + Training), `lbv4_ci` (Check-in), `lbv4_ph` (Fotos), `lbv4_hi` (Hints), `lbv4_supp` (Supp-Status), `lbv4_koff` (Koffein-Log), `lbv4_exdb` (Übungsdatenbank), `lb_kraft_tog` / `lb_cardio_tog` (Toggle-Persistenz bis Mitternacht), `lbv4_backup_dismissed`
-- `_dbCache` für Performance; `_safeSave()` mit Fallback
+---
 
-### Apple Health
-- Alle automatischen Health-Sync-Funktionen entfernt
-- Einziger Überrest: **"♥ In Apple Health schreiben"-Button** — Shortcut `Logbuch-zu-Health`, Gewicht im Format `85,1` (deutsches Komma, zwingend)
+## Technische Referenz
+
+- **Syntaxcheck JS:** `node --check <(sed -n '/<script>/,/<\/script>/p' index.html | sed '1d;$d')`
+- **Health-Button Shortcut-Name:** exakt `Logbuch-zu-Health`
+- **Gewicht-Format:** `val.toFixed(1).replace('.', ',')` — deutsches Format zwingend
+- **Supplement-Änderungen:** immer zuerst `/supplement-stack-check` ausführen, Feedback vorlegen, erst nach Freigabe einbauen
+- **Keine neuen Dateien** — alles in `index.html`
+- **Vor Löschen/Überschreiben** immer nachfragen
+- **Exercise-DB Seed-Liste:** in `initExDB()` — manuelle Einträge für Übungen die nicht im PLAN stehen: `['Name','Muskel',GymIndex]`
+- **Foto-Storage:** `ph[weekKey]` = `{front, side, back}` (neu) oder `string` (alt → wird als front behandelt)
+- **isLegMuscle(m):** Hamstrings|Quads|Waden|Adduktoren|Glutes → Startbein statt Startarm
 
 ---
 
@@ -154,14 +151,3 @@
 | Glutamin | 20–30g | morgens |
 | Curcumin (akut) | 500–2000mg | zur Mahlzeit |
 | Omega-3 (akut) | 3g EPA+DHA | zur Mahlzeit |
-
----
-
-## Technische Referenz
-
-- **Syntaxcheck JS:** `node --check <(sed -n '/<script>/,/<\/script>/p' index.html | sed '1d;$d')`
-- **Health-Button Shortcut-Name:** exakt `Logbuch-zu-Health`
-- **Gewicht-Format:** `val.toFixed(1).replace('.', ',')` — deutsches Format zwingend
-- **Supplement-Änderungen:** immer zuerst `/supplement-stack-check` ausführen, Feedback vorlegen, erst nach Freigabe einbauen
-- **Keine neuen Dateien** — alles in `index.html`
-- **Vor Löschen/Überschreiben** immer nachfragen
