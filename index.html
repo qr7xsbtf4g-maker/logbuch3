@@ -32,15 +32,15 @@ body{background:#E8E3D8}
 @keyframes splashBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 
 /* NAV */
-.nav{position:relative;z-index:100;background:var(--bg);border-bottom:1px solid var(--bd);padding-top:calc(var(--st) + 10px);padding-left:calc(var(--sl) + var(--px));padding-right:calc(var(--sr) + var(--px));padding-bottom:0;flex-shrink:0}
-.nav-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.nav{position:relative;z-index:100;background:var(--bg);border-bottom:1px solid var(--bd);padding-top:calc(var(--st) + 6px);padding-left:calc(var(--sl) + var(--px));padding-right:calc(var(--sr) + var(--px));padding-bottom:0;flex-shrink:0}
+.nav-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
 .nav-logo{font-family:'Geist',sans-serif;font-weight:700;font-size:22px;letter-spacing:1px;color:var(--gold)}
 .nav-sub{font-family:'Geist',sans-serif;font-size:10px;font-weight:400;letter-spacing:0.5px;color:var(--txm)}
 .nav-tabs{display:flex;border-top:1px solid var(--bd)}
 .nav-tab{flex:1;font-family:'Geist',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;padding:13px 4px 12px;border:none;background:transparent;color:var(--txm);cursor:pointer;text-transform:uppercase;border-bottom:2px solid transparent;transition:all .15s;text-align:center}
 .nav-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 
-.view{display:none;padding-top:16px;padding-left:calc(var(--sl) + var(--px));padding-right:calc(var(--sr) + var(--px));padding-bottom:calc(108px + env(safe-area-inset-bottom,0px));height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.view{display:none;padding-top:12px;padding-left:calc(var(--sl) + var(--px));padding-right:calc(var(--sr) + var(--px));padding-bottom:calc(72px + env(safe-area-inset-bottom,0px));height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .view.active{display:block}
 
 /* ── BOTTOM TAB BAR ── */
@@ -79,7 +79,7 @@ body{background:#E8E3D8}
 .autosave-dot{width:5px;height:5px;border-radius:50%;background:var(--okl);box-shadow:0 0 6px rgba(34,168,84,0.7)}
 
 /* ── TAGES-ZITAT ── */
-.quote-row{display:block;margin-bottom:14px}
+.quote-row{display:block;margin-bottom:10px}
 .quote-card{border-left:2px solid rgba(200,100,60,0.3);padding:10px 14px;margin-bottom:6px;background:rgba(200,100,60,0.02);border-radius:0 8px 8px 0;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background 0.15s}
 .quote-card:active{background:rgba(200,100,60,0.07)}
 .quote-text{font-family:'Geist',sans-serif;font-size:13px;font-style:italic;color:var(--tx);line-height:1.5;margin-bottom:5px}
@@ -95,7 +95,7 @@ body{background:#E8E3D8}
 .ta-modal{background:var(--s1);border-radius:16px 16px 0 0;padding:24px 20px 40px;width:100%;transform:translateY(30px);transition:transform 0.25s;border-top:1px solid rgba(26,122,63,0.25)}
 .ta-modal-bg.open .ta-modal{transform:translateY(0)}
 .ta-modal-label{font-family:'Geist Mono',monospace;font-size:7px;color:var(--ok);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
-.ta-modal-title{font-family:'Geist',sans-serif;font-size:16px;font-weight:600;color:var(--tx);line-height:1.4;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(26,122,63,0.18)}
+.ta-modal-title{font-family:'Geist',sans-serif;font-size:16px;font-weight:600;color:var(--tx);line-height:1.4;margin-bottom:10px;padding-bottom:12px;border-bottom:1px solid rgba(26,122,63,0.18)}
 .ta-modal-body{font-family:'Geist',sans-serif;font-size:14px;color:var(--txm);line-height:1.6}
 .ta-modal-close{font-family:'Geist Mono',monospace;font-size:9px;color:var(--txd);margin-top:18px;text-align:center;letter-spacing:1px}
 .author-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:400;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.2s}
@@ -110,9 +110,9 @@ body{background:#E8E3D8}
 /* COMMON */
 .sh{font-family:'Geist',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.06em;color:var(--gold);margin:24px 0 10px;display:flex;align-items:center;gap:10px;text-transform:uppercase}
 .sh::after{content:'';flex:1;height:0.5px;background:var(--bd)}
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r2);padding:16px;margin-bottom:14px}
-.card-secondary{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r2);padding:14px;margin-bottom:14px}
-.card-ghost{background:transparent;border:1px solid var(--bd);border-radius:var(--r2);padding:14px;margin-bottom:14px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r2);padding:14px;margin-bottom:10px}
+.card-secondary{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r2);padding:12px;margin-bottom:10px}
+.card-ghost{background:transparent;border:1px solid var(--bd);border-radius:var(--r2);padding:12px;margin-bottom:10px}
 .fr{display:grid;gap:9px;margin-bottom:9px}
 .fr.c2{grid-template-columns:1fr 1fr}
 .fr.c3{grid-template-columns:1fr 1fr 1fr}
@@ -142,7 +142,7 @@ body{background:#E8E3D8}
 .gym-btn{flex:1;padding:12px 5px;border-radius:var(--r);border:1px solid var(--bd);background:var(--s2);color:var(--txm);font-family:'Geist',sans-serif;font-weight:600;font-size:13px;letter-spacing:0;cursor:pointer;text-align:center;transition:background .15s,border-color .15s,color .15s,transform .25s cubic-bezier(0.34,1.56,0.64,1);line-height:1.3}
 .gym-btn:active{transform:scale(0.94)}
 .gym-btn.sel{border-color:var(--goldd);color:var(--gold);background:var(--goldf)}
-.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .split-btn{padding:14px 8px;border-radius:var(--r);border:1px solid var(--bd);background:var(--s2);color:var(--txm);font-family:'Geist',sans-serif;font-weight:600;font-size:15px;letter-spacing:0;cursor:pointer;text-align:center;transition:background .15s,border-color .15s,color .15s,transform .25s cubic-bezier(0.34,1.56,0.64,1)}
 .split-btn:active{transform:scale(0.94)}
 .split-btn span{display:block;font-family:'Geist',sans-serif;font-size:10px;font-weight:400;letter-spacing:0;color:var(--txd);margin-top:3px}
@@ -259,7 +259,7 @@ body{background:#E8E3D8}
 .del-today-btn:active{background:rgba(155,44,44,0.12)}
 
 /* STATS / WEEKLY */
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
 .stat-box{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:10px;text-align:center}
 .stat-val{font-family:'Geist',sans-serif;font-weight:700;font-size:22px;color:var(--gold);letter-spacing:0;line-height:1}
 .stat-lbl{font-family:'Geist',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.04em;color:var(--txm);text-transform:uppercase;margin-top:2px}
@@ -351,7 +351,7 @@ body{background:#E8E3D8}
 .ticker-accent{color:var(--gold);margin-right:7px;font-size:9px;letter-spacing:1.5px;font-family:'Geist',sans-serif;font-weight:700}
 
 /* Day Ring + Hero Row */
-.hero-row{display:flex;gap:14px;align-items:center;margin-bottom:14px}
+.hero-row{display:flex;gap:14px;align-items:center;margin-bottom:10px}
 .day-ring-wrap{position:relative;width:108px;height:108px;flex-shrink:0}
 .day-ring-svg{width:100%;height:100%}
 .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
@@ -383,7 +383,7 @@ body{background:#E8E3D8}
 .supp-dose{font-family:'Geist Mono',monospace;font-size:9px;color:var(--txm)}
 .supp-check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:11px;color:transparent;flex-shrink:0}
 .supp-item.done .supp-check{background:var(--okl);border-color:var(--okl);color:#fff}
-.supp-progress{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.supp-progress{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .supp-prog-bar{flex:1;height:2px;background:var(--bd);border-radius:2px;overflow:hidden}
 .supp-prog-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .35s ease}
 .supp-prog-count{font-family:'Geist Mono',monospace;font-size:11px;color:var(--gold);min-width:28px;text-align:right}
@@ -432,7 +432,7 @@ body{background:#E8E3D8}
 .th-entry-body.open{display:block}
 
 /* ── LAST SESSION HERO ── */
-.last-session-hero{background:var(--goldf);border:1px solid rgba(200,100,60,0.20);border-radius:var(--r2);padding:13px;margin-bottom:14px}
+.last-session-hero{background:var(--goldf);border:1px solid rgba(200,100,60,0.20);border-radius:var(--r2);padding:13px;margin-bottom:10px}
 .lsh-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:8px}
 .lsh-title{font-family:'Geist',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.5px;color:var(--gold)}
 .lsh-meta{font-family:'Geist Mono',monospace;font-size:8.5px;color:var(--txm);text-align:right;line-height:1.4}
@@ -471,7 +471,7 @@ body{background:#E8E3D8}
 .hero-strip-main .ticker-dot{background:#6BE3A4}
 
 /* ── KPI DAILY GRID ── */
-.kpi-daily-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.kpi-daily-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .kpi-daily-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:14px 14px 12px;transition:border-color .15s}
 .kpi-daily-card:active{border-color:var(--goldd)}
 .kpi-daily-eye{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--txm);margin-bottom:5px}
@@ -479,7 +479,7 @@ body{background:#E8E3D8}
 .kpi-daily-sub{font-size:11px;color:var(--txd);margin-top:3px}
 
 /* ── EDITORIAL BLOCK (Quote + Impuls) ── */
-.editorial-block{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:18px;margin-bottom:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .15s}
+.editorial-block{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:18px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .15s}
 .editorial-block:active{border-color:var(--goldd)}
 .editorial-quote{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-size:17px;line-height:1.45;letter-spacing:-0.01em;color:var(--tx);margin-bottom:8px}
 .editorial-author{font-size:12px;color:var(--txm);display:flex;align-items:center;gap:8px}
@@ -504,7 +504,7 @@ body{background:#E8E3D8}
 .swap-modal-bg.open{opacity:1;pointer-events:auto}
 .swap-modal{background:var(--s1);border-radius:16px 16px 0 0;padding:20px 16px 40px;width:100%;transform:translateY(30px);transition:transform 0.25s;border-top:2px solid var(--gold);box-sizing:border-box;max-height:80vh;display:flex;flex-direction:column}
 .swap-modal-bg.open .swap-modal{transform:translateY(0)}
-.swap-modal-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-shrink:0}
+.swap-modal-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-shrink:0}
 .swap-modal-cur{font-family:'Geist',sans-serif;font-size:13px;font-weight:600;color:var(--tx);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .swap-modal-muscle-tag{font-family:'Geist Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:1px;background:rgba(200,100,60,0.1);padding:2px 7px;border-radius:99px;border:1px solid rgba(200,100,60,0.2);flex-shrink:0}
 .swap-search{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--bd2);border-radius:var(--r);background:var(--bg);color:var(--tx);font-family:'Geist',sans-serif;font-size:14px;margin-bottom:10px;flex-shrink:0;outline:none;-webkit-appearance:none}
@@ -767,7 +767,7 @@ body{background:#E8E3D8}
 
 <!-- ═══════════════════════ TRAINING ═══════════════════════ -->
 <div class="view">
-  <div id="today-plan-banner" style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:var(--r2);border:1px solid var(--bd);background:var(--s2);margin-bottom:14px">
+  <div id="today-plan-banner" style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:var(--r2);border:1px solid var(--bd);background:var(--s2);margin-bottom:10px">
     <div>
       <div id="today-plan-day" style="font-family:'Geist',sans-serif;font-weight:600;font-size:11px;letter-spacing:0;color:var(--txm)">—</div>
       <div id="today-plan-label" style="font-family:'Geist',sans-serif;font-weight:700;font-size:20px;letter-spacing:1px;color:var(--tx);margin-top:1px">—</div>
@@ -860,7 +860,7 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px">
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:10px">
     <div class="stack-toggle-row" onclick="toggleSleepStack()">
       <div>
         <div class="stack-toggle-label" style="color:var(--tx)">SCHLAF-STACK</div>
@@ -873,7 +873,7 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px">
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:10px">
     <div class="stack-toggle-row" onclick="toggleIllnessMode()">
       <div>
         <div class="stack-toggle-label" style="color:var(--errl)">KRANKHEIT-STACK</div>
@@ -893,7 +893,7 @@ body{background:#E8E3D8}
 <div class="view">
 
   <!-- Sonntags-Backup-Banner -->
-  <div id="backup-banner" style="display:none;margin-bottom:14px;padding:14px 16px;background:#0F0F0E;border-radius:var(--r2);position:relative;overflow:hidden">
+  <div id="backup-banner" style="display:none;margin-bottom:10px;padding:14px 16px;background:#0F0F0E;border-radius:var(--r2);position:relative;overflow:hidden">
     <div style="position:absolute;inset:0;background:radial-gradient(circle at 95% 50%,rgba(200,100,60,0.22),transparent 60%);pointer-events:none"></div>
     <div style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px">
       <div>
@@ -908,11 +908,11 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <div id="wk-quick-score" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:14px"></div>
+  <div id="wk-quick-score" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px"></div>
   <div class="sh">Wochenschnitt</div>
   <div class="stat-grid" id="ci-stats" style="grid-template-columns:1fr 1fr"></div>
 
-  <div class="card" style="padding:0;margin-bottom:14px;overflow:hidden">
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wc-body','wc-chev')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Gewichtsverlauf</span>
       <span class="chev" id="wc-chev">▾</span>
@@ -922,7 +922,7 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <div class="card" style="padding:0;margin-bottom:14px;overflow:hidden">
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-wellbeing','wbsc-wellbeing')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Wohlbefinden</span>
       <span class="chev" id="wbsc-wellbeing">▾</span>
@@ -936,7 +936,7 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <div class="card" style="padding:0;margin-bottom:14px;overflow:hidden">
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-perf','wbsc-perf')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Trainingsqualität Trend</span>
       <span class="chev" id="wbsc-perf">▾</span>
@@ -946,7 +946,7 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <div class="card" style="padding:0;margin-bottom:14px;overflow:hidden">
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-zone2','wbsc-zone2')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Zone 2 Cardio</span>
       <span class="chev" id="wbsc-zone2">▾</span>
@@ -956,7 +956,7 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <div class="card" style="padding:0;margin-bottom:14px;overflow:hidden">
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-musclesets','wbsc-musclesets')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Muskelgruppen / Woche</span>
       <span class="chev" id="wbsc-musclesets">▾</span>
@@ -966,7 +966,7 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <div class="card" style="padding:0;margin-bottom:14px;overflow:hidden">
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-daily','wbsc-daily')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Wochenschnitt Daily</span>
       <span class="chev" id="wbsc-daily">▾</span>
@@ -977,7 +977,7 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <div class="card" style="padding:0;margin-bottom:14px;overflow:hidden">
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-trend','wbsc-trend')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Wochenvergleich</span>
       <span class="chev" id="wbsc-trend">▾</span>
@@ -987,7 +987,7 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <div class="card" style="padding:0;margin-bottom:14px;overflow:hidden">
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-koerper','wbsc-koerper')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Wöchentlicher Check-in</span>
       <span class="chev" id="wbsc-koerper">▾</span>
@@ -1052,13 +1052,13 @@ body{background:#E8E3D8}
       </div>
 
       <!-- Aktionen -->
-      <div id="ci-muscle-checkin" style="margin-bottom:14px"></div>
+      <div id="ci-muscle-checkin" style="margin-bottom:10px"></div>
       <button class="save-btn" onclick="saveCheckin()">Check-in speichern</button>
       <button onclick="generatePDF()" style="width:100%;margin-top:8px;padding:12px;background:transparent;border:1px solid var(--bd);border-radius:var(--r);color:var(--txm);font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s" onmouseenter="this.style.borderColor='var(--goldd)';this.style.color='var(--gold)'" onmouseleave="this.style.borderColor='var(--bd)';this.style.color='var(--txm)'">Wochenbericht als PDF</button>
     </div>
   </div>
 
-  <div class="card" style="padding:0;margin-bottom:14px;overflow:hidden">
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-cihistory','wbsc-cihistory')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Check-in Verlauf</span>
       <span class="chev" id="wbsc-cihistory">▾</span>
@@ -1068,7 +1068,7 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <div class="card" style="padding:0;margin-bottom:14px;overflow:hidden">
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-data','wbsc-data')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Daten</span>
       <span class="chev" id="wbsc-data">▾</span>
@@ -1195,6 +1195,11 @@ function initExDB(){
       });
     });
   });
+  // Manuelle Einträge (nicht im PLAN, aber verfügbar per Gym)
+  [['Seitheben Maschine','Schulter',1]].forEach(([name,muscle,gym])=>{
+    if(!d[name]){d[name]={muscle,gyms:[gym]};changed=true;}
+    else if(!d[name].gyms.includes(gym)){d[name].gyms.push(gym);changed=true;}
+  });
   if(changed)dbEXS(d);
 }
 function addToExDB(name,muscle,gymIdx){
@@ -1216,7 +1221,8 @@ function tog(k,btn){const was=btn.classList.contains('sel');btn.closest('.tog-ro
 function togCardio(v,btn){const was=btn.classList.contains('sel');btn.closest('.tog-row').querySelectorAll('.tog-btn').forEach(b=>b.classList.remove('sel'));if(!was){btn.classList.add('sel');document.getElementById('cardio-details').style.display=v==='ja'?'block':'none';document.getElementById('cardio-save-btn').style.display=v==='ja'?'block':'none';ST.toggles['cardio']=v;localStorage.setItem('lb_cardio_tog',JSON.stringify({date:today(),value:v}));}else{document.getElementById('cardio-details').style.display='none';document.getElementById('cardio-save-btn').style.display='none';delete ST.toggles['cardio'];localStorage.removeItem('lb_cardio_tog');}}
 function togKraft(v,btn){const was=btn.classList.contains('sel');btn.closest('.tog-row').querySelectorAll('.tog-btn').forEach(b=>b.classList.remove('sel'));if(!was){btn.classList.add('sel');document.getElementById('kraft-section').style.display=v==='ja'?'block':'none';ST.toggles['kraft']=v;localStorage.setItem('lb_kraft_tog',JSON.stringify({date:today(),value:v}));if(v==='ja'&&ST._todaySplit&&!ST.split){const _sb=document.querySelector(`.split-btn[onclick="selSplit('${ST._todaySplit}',this)"]`);if(_sb)selSplit(ST._todaySplit,_sb);}}else{document.getElementById('kraft-section').style.display='none';delete ST.toggles['kraft'];localStorage.removeItem('lb_kraft_tog');}}
 function toggleH(b,c){document.getElementById(b)?.classList.toggle('open');document.getElementById(c)?.classList.toggle('open')}
-function isUnilateral(name){if(/unilateral/i.test(name))return true;if(/KH/.test(name)&&!/Machine|Press|Row|Seitheben/i.test(name))return true;return false;}
+function isUnilateral(name){if(/unilateral/i.test(name))return true;if(/Preacher/i.test(name))return true;if(/(KH|Kurzhantel)/i.test(name)&&!/Machine|Press|Row|Seitheben/i.test(name))return true;return false;}
+function isLegMuscle(m){return/Hamstrings|Quads|Waden|Adduktoren|Glutes/i.test(m);}
 
 /* ── SWIPE NAV ── */
 function goTab(idx){
@@ -1482,6 +1488,7 @@ function buildEx(split){
     const isPersistOvr=!!persistOvs[origIdx]&&!ST.swapOverrides?.[origIdx];
     const isSessionSwap=!!ST.swapOverrides?.[origIdx];
     const uni=isUnilateral(name);
+    const limbLabel=isLegMuscle(muscle)?'Startbein':'Startarm';
     const prev=lastEx(name);
     ST.exSets[ei]={name,muscle,sets:ex.sets,prog:'same',uni,arm:'links'};
     let prevText='';
@@ -1510,7 +1517,7 @@ function buildEx(split){
         </div>
         ${prevText}
         ${uni?`<div class="arm-sel" style="margin-top:8px">
-          <span class="arm-label">Startarm:</span>
+          <span class="arm-label">${limbLabel}:</span>
           <button class="arm-btn sel" id="arm-l-${ei}" onclick="selArm(${ei},'links',this)">Links</button>
           <button class="arm-btn" id="arm-r-${ei}" onclick="selArm(${ei},'rechts',this)">Rechts</button>
         </div>`:''}
