@@ -17,11 +17,12 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{background-color:#E8E3D8}
 html,body{height:100%;overflow:hidden;color:var(--tx);font-family:'Geist',sans-serif;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
-body{background:#E8E3D8}
-#swipe-container{height:100%;overflow:hidden}
+body{background:#E8E3D8;display:flex;flex-direction:column}
+#app-frame{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden}
+#swipe-container{flex:1;min-height:0;overflow:hidden}
 
 /* SPLASH */
-#splash{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#splash{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
 #splash.out{opacity:0;pointer-events:none;transition:opacity .4s ease}
 .splash-title{font-family:'Geist',sans-serif;font-weight:700;font-size:72px;letter-spacing:8px;color:#fff;line-height:1;text-align:center}
 .splash-name{font-family:'Geist',sans-serif;font-size:13px;font-weight:300;letter-spacing:6px;color:var(--gold);text-transform:uppercase;margin:8px 0 48px;text-align:center}
@@ -31,7 +32,7 @@ body{background:#E8E3D8}
 @keyframes splashBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 
 /* NAV */
-.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--bd);padding-top:calc(var(--st) + 10px);padding-left:calc(var(--sl) + var(--px));padding-right:calc(var(--sr) + var(--px));padding-bottom:0}
+.nav{position:relative;z-index:100;background:var(--bg);border-bottom:1px solid var(--bd);padding-top:calc(var(--st) + 10px);padding-left:calc(var(--sl) + var(--px));padding-right:calc(var(--sr) + var(--px));padding-bottom:0;flex-shrink:0}
 .nav-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .nav-logo{font-family:'Geist',sans-serif;font-weight:700;font-size:22px;letter-spacing:1px;color:var(--gold)}
 .nav-sub{font-family:'Geist',sans-serif;font-size:10px;font-weight:400;letter-spacing:0.5px;color:var(--txm)}
@@ -89,7 +90,7 @@ body{background:#E8E3D8}
 .takeaway-label{font-family:'Geist Mono',monospace;font-size:7px;color:var(--ok);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
 .takeaway-text{font-family:'Geist',sans-serif;font-size:14px;font-weight:500;color:var(--tx);line-height:1.45}
 .takeaway-hint{font-size:7px;color:rgba(26,122,63,0.5);letter-spacing:0.5px;margin-top:6px}
-.ta-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.ta-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:400;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.2s}
 .ta-modal-bg.open{opacity:1;pointer-events:auto}
 .ta-modal{background:var(--s1);border-radius:16px 16px 0 0;padding:24px 20px 40px;width:100%;transform:translateY(30px);transition:transform 0.25s;border-top:1px solid rgba(26,122,63,0.25)}
 .ta-modal-bg.open .ta-modal{transform:translateY(0)}
@@ -97,7 +98,7 @@ body{background:#E8E3D8}
 .ta-modal-title{font-family:'Geist',sans-serif;font-size:16px;font-weight:600;color:var(--tx);line-height:1.4;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(26,122,63,0.18)}
 .ta-modal-body{font-family:'Geist',sans-serif;font-size:14px;color:var(--txm);line-height:1.6}
 .ta-modal-close{font-family:'Geist Mono',monospace;font-size:9px;color:var(--txd);margin-top:18px;text-align:center;letter-spacing:1px}
-.author-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.author-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:400;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.2s}
 .author-modal-bg.open{opacity:1;pointer-events:auto}
 .author-modal{background:var(--s1);border-radius:16px 16px 0 0;padding:24px 20px 40px;width:100%;transform:translateY(30px);transition:transform 0.25s;border-top:1px solid rgba(200,100,60,0.2)}
 .author-modal-bg.open .author-modal{transform:translateY(0)}
@@ -270,7 +271,7 @@ body{background:#E8E3D8}
 .phl{font-family:'Geist',sans-serif;font-size:11px;letter-spacing:1px;color:var(--txm);text-transform:uppercase}
 .empty{text-align:center;padding:36px 20px;color:var(--txm);font-family:'Geist',sans-serif;font-size:13px;letter-spacing:0}
 #vol-total{font-family:'Geist Mono',monospace;font-size:10px;color:var(--goldd);font-style:normal;letter-spacing:0}
-.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--gold);color:#fff;font-family:'Geist',sans-serif;font-weight:600;font-size:14px;letter-spacing:0;padding:9px 20px;border-radius:20px;opacity:0;transition:all .25s;pointer-events:none;z-index:9998;white-space:nowrap}
+.toast{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(20px);background:var(--gold);color:#fff;font-family:'Geist',sans-serif;font-weight:600;font-size:14px;letter-spacing:0;padding:9px 20px;border-radius:20px;opacity:0;transition:all .25s;pointer-events:none;z-index:9998;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.undoable{pointer-events:auto}
 .toast-undo-btn{background:rgba(0,0,0,.25);border:none;border-radius:10px;color:#000;font-family:'Geist',sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;padding:3px 10px;cursor:pointer;margin-left:8px}
@@ -515,6 +516,84 @@ body{background:#E8E3D8}
 .swap-item.swap-current{color:var(--txd);pointer-events:none}
 .swap-modal-close{font-family:'Geist Mono',monospace;font-size:9px;color:var(--txd);margin-top:16px;text-align:center;letter-spacing:1px;flex-shrink:0}
 
+/* ── DESKTOP LAYOUT (Mac / Browser ≥ 768px) ── */
+@media (min-width: 768px) {
+  html{background:var(--bg)}
+  body{background:var(--bg);flex-direction:row;align-items:stretch}
+
+  #app-frame{
+    flex:1;min-width:0;
+    display:grid;
+    grid-template-columns:190px 1fr;
+    grid-template-rows:auto 1fr;
+    overflow:hidden
+  }
+
+  /* Sidebar: linke Spalte, volle Höhe */
+  .tab-bar{
+    position:relative;
+    grid-column:1;grid-row:1 / -1;
+    flex-direction:column;justify-content:flex-start;align-items:stretch;
+    padding:0 10px 20px;gap:2px;
+    background:var(--s1);
+    border-right:1px solid var(--bd);border-top:none;
+    bottom:auto;left:auto;right:auto;width:auto;height:auto;
+    overflow-y:auto
+  }
+  /* Sidebar-Logo oben */
+  .tab-bar::before{
+    content:'DJI';
+    display:block;
+    font-family:'Geist',sans-serif;font-weight:700;font-size:22px;letter-spacing:4px;
+    color:var(--gold);
+    padding:24px 14px 20px;
+    margin:0 -10px 8px;
+    border-bottom:1px solid var(--bd)
+  }
+
+  /* Nav: nur rechte Spalte */
+  .nav{grid-column:2;grid-row:1;position:relative;z-index:10}
+  #swipe-container{grid-column:2;grid-row:2}
+
+  /* Tab-Buttons: horizontal, linksbündig */
+  .tab-btn{
+    flex:none;
+    flex-direction:row;justify-content:flex-start;align-items:center;
+    padding:11px 14px;border-radius:8px;gap:10px;
+    text-align:left
+  }
+  .tab-icon-w{width:22px;height:22px;flex-shrink:0}
+  .tab-ico{font-size:18px}
+  .tab-lbl{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;text-align:left}
+  /* Aktiv-Indikator: linker Balken */
+  .tab-btn.active::before{
+    top:50%;left:0;transform:translateY(-50%);
+    width:2px;height:60%;border-radius:0 2px 2px 0;
+    box-shadow:none
+  }
+
+  /* Views: kein Tab-Bar-Padding unten */
+  .view{padding-left:var(--px);padding-right:var(--px);padding-bottom:28px}
+
+  /* Hover-Effekte */
+  .card:hover{border-color:rgba(200,100,60,0.28)!important;box-shadow:0 2px 12px rgba(200,100,60,0.05)}
+  .gym-btn:hover{border-color:var(--goldd)!important;color:var(--gold)!important;background:var(--goldf)!important}
+  .save-btn:hover{background:var(--goldl)!important}
+  .koff-btn:hover{background:rgba(200,100,60,0.14)!important}
+  .supp-item:hover{background:var(--s3)!important;border-color:var(--bd2)!important}
+  .tab-btn:hover:not(.active){background:var(--s3)}
+
+  /* Modals: zentrierter Dialog statt Bottom-Sheet */
+  .ta-modal-bg,.author-modal-bg,.swap-modal-bg{align-items:center}
+  .ta-modal,.author-modal{
+    border-radius:16px;max-width:480px;margin:0 auto;
+    padding-bottom:24px;transform:translateY(16px)
+  }
+  .ta-modal-bg.open .ta-modal,.author-modal-bg.open .author-modal{transform:translateY(0)}
+  .swap-modal{border-radius:16px;max-width:480px;transform:translateY(16px)}
+  .swap-modal-bg.open .swap-modal{transform:translateY(0)}
+}
+
 </style>
 </head>
 <body>
@@ -526,6 +605,8 @@ body{background:#E8E3D8}
   <div class="splash-sub">TRUST THE PROCESS</div>
   <div class="splash-bar"></div>
 </div>
+
+<div id="app-frame">
 
 <div class="nav">
   <div class="nav-top"><div><div class="nav-logo" onclick="loadTodayEntry()" style="cursor:pointer;-webkit-tap-highlight-color:transparent">DASHBOARD</div><div style="font-family:'Geist',sans-serif;font-size:9px;letter-spacing:0.5px;color:var(--txm);margin-top:1px">von Dustin</div></div><div class="nav-sub" id="today-label"></div></div>
@@ -719,9 +800,9 @@ body{background:#E8E3D8}
     <div id="session-muscle-sum" style="display:none;margin-bottom:10px"></div>
     <div id="timer-banner" class="timer-banner"></div>
     <div id="exercises-container"></div>
-    <div class="sh">Performance & Notizen</div>
+    <div class="sh">Trainingsqualität & Notizen</div>
     <div class="card">
-      <div class="slider-wrap"><div class="lbl">Performance</div><div class="slider-row"><input type="range" min="1" max="10" value="1" step="1" id="sl-perf" oninput="updSl('perf')"><span class="slider-val" id="sv-perf">1</span><span class="slider-max">/10</span></div></div>
+      <div class="slider-wrap"><div class="lbl">Trainingsqualität</div><div class="slider-row"><input type="range" min="1" max="10" value="1" step="1" id="sl-perf" oninput="updSl('perf')"><span class="slider-val" id="sv-perf">1</span><span class="slider-max">/10</span></div></div>
       <div class="f"><label>Notizen zur Einheit</label><textarea id="t-notizen" placeholder="Wie lief die Einheit? Besonderheiten..."></textarea></div>
     </div>
     <button class="save-btn" onclick="saveTraining(this)">Krafttraining speichern</button>
@@ -856,7 +937,7 @@ body{background:#E8E3D8}
 
   <div class="card" style="padding:0;margin-bottom:14px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-perf','wbsc-perf')" style="padding:12px 14px;border-top:none">
-      <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Performance Trend</span>
+      <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Trainingsqualität Trend</span>
       <span class="chev" id="wbsc-perf">▾</span>
     </div>
     <div class="ex-section-body" id="wbs-perf" style="padding:0 12px 12px">
@@ -941,22 +1022,31 @@ body{background:#E8E3D8}
         </div>
       </div>
 
-      <!-- Fotos -->
-      <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--txm);margin-bottom:8px">Fortschrittsfotos</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">
-        <div>
-          <div style="font-size:9px;color:var(--txd);text-align:center;margin-bottom:5px">Vorwoche</div>
-          <div id="pps" style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center">
-            <img id="ppi" style="width:100%;height:100%;object-fit:cover;display:none"><span class="phl" style="font-size:11px;color:var(--txd)">Kein Foto</span>
-          </div>
+      <!-- Fotos: 3 Typen × Vorwoche/Diese Woche -->
+      <div style="border-top:1px solid var(--bd);padding-top:16px;margin-bottom:18px">
+        <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--txm);margin-bottom:10px">Fortschrittsfotos</div>
+        <!-- Spalten-Labels -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px">
+          <div style="text-align:center;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--txm)">Front</div>
+          <div style="text-align:center;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--txm)">Seite</div>
+          <div style="text-align:center;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--txm)">Back</div>
         </div>
-        <div>
-          <div style="font-size:9px;color:var(--txd);text-align:center;margin-bottom:5px">Diese Woche</div>
-          <div onclick="document.getElementById('photo-input').click()" style="background:var(--s2);border:1px dashed var(--goldd);border-radius:var(--r);overflow:hidden;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent">
-            <img id="pni" style="width:100%;height:100%;object-fit:cover;display:none">
-            <div style="text-align:center"><div style="font-size:20px;color:var(--goldd);margin-bottom:4px">+</div><div class="phl" id="pnl" style="font-size:10px;color:var(--goldd)">Foto wählen</div></div>
-          </div>
-          <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="loadPhoto(this)">
+        <!-- Vorwoche -->
+        <div style="font-size:8px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--txd);margin-bottom:5px">Vorwoche</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
+          <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center"><img id="ppi-front" style="width:100%;height:100%;object-fit:cover;display:none"><span id="pph-front" style="font-size:9px;color:var(--txd)">—</span></div>
+          <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center"><img id="ppi-side" style="width:100%;height:100%;object-fit:cover;display:none"><span id="pph-side" style="font-size:9px;color:var(--txd)">—</span></div>
+          <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center"><img id="ppi-back" style="width:100%;height:100%;object-fit:cover;display:none"><span id="pph-back" style="font-size:9px;color:var(--txd)">—</span></div>
+        </div>
+        <!-- Diese Woche -->
+        <div style="font-size:8px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:5px">Diese Woche</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+          <div onclick="document.getElementById('photo-front').click()" style="background:var(--s2);border:1px dashed var(--goldd);border-radius:var(--r);overflow:hidden;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent"><img id="pni-front" style="width:100%;height:100%;object-fit:cover;display:none"><div id="pnl-front" style="text-align:center"><div style="font-size:16px;color:var(--goldd);margin-bottom:2px">+</div><div style="font-size:8px;color:var(--goldd)">Front</div></div></div>
+          <input type="file" id="photo-front" accept="image/*" style="display:none" onchange="loadPhoto(this,'front')">
+          <div onclick="document.getElementById('photo-side').click()" style="background:var(--s2);border:1px dashed var(--goldd);border-radius:var(--r);overflow:hidden;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent"><img id="pni-side" style="width:100%;height:100%;object-fit:cover;display:none"><div id="pnl-side" style="text-align:center"><div style="font-size:16px;color:var(--goldd);margin-bottom:2px">+</div><div style="font-size:8px;color:var(--goldd)">Seite</div></div></div>
+          <input type="file" id="photo-side" accept="image/*" style="display:none" onchange="loadPhoto(this,'side')">
+          <div onclick="document.getElementById('photo-back').click()" style="background:var(--s2);border:1px dashed var(--goldd);border-radius:var(--r);overflow:hidden;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent"><img id="pni-back" style="width:100%;height:100%;object-fit:cover;display:none"><div id="pnl-back" style="text-align:center"><div style="font-size:16px;color:var(--goldd);margin-bottom:2px">+</div><div style="font-size:8px;color:var(--goldd)">Back</div></div></div>
+          <input type="file" id="photo-back" accept="image/*" style="display:none" onchange="loadPhoto(this,'back')">
         </div>
       </div>
 
@@ -1038,7 +1128,7 @@ const PLAN={
   ]}
 };
 
-let ST={gym:parseInt(localStorage.getItem('lb_gym')||'0'),split:null,toggles:{},exSets:{},currentPhoto:null,currentTab:0,sessionOrder:null,_todaySplit:null,swapOverrides:{}};
+let ST={gym:parseInt(localStorage.getItem('lb_gym')||'0'),split:null,toggles:{},exSets:{},currentPhotos:{front:null,side:null,back:null},currentTab:0,sessionOrder:null,_todaySplit:null,swapOverrides:{}};
 let suppData={datum:'',daily:[],sleep:[],illnessMode:false,illness:[]};
 const DAILY_SUPPS=[
   {name:'Rhodiola Rosea',dose:'500mg · Mahlzeit: nüchtern besser',timing:'morgens'},
@@ -1953,7 +2043,7 @@ function saveCardio(btn=null){
 
 function saveCheckin(){
   const datum=document.getElementById('ci-datum').value;if(!datum){toast('Datum fehlt!');return}
-  if(ST.currentPhoto){const ph=dbPH();ph[getWK(new Date(datum))]=ST.currentPhoto;dbPHS(ph)}
+  const _cp=ST.currentPhotos;if(_cp.front||_cp.side||_cp.back){const _ph=dbPH();const _wk=getWK(new Date(datum));const _ex=(_ph[_wk]&&typeof _ph[_wk]==='object')?_ph[_wk]:(typeof _ph[_wk]==='string'?{front:_ph[_wk]}:{});if(_cp.front)_ex.front=_cp.front;if(_cp.side)_ex.side=_cp.side;if(_cp.back)_ex.back=_cp.back;_ph[_wk]=_ex;dbPHS(_ph);}
   const wAvg=calcWkAvg('gewicht',datum);
   const u_nabel=document.getElementById('ci-u1').value;
   const kfa=calcKFA(u_nabel,wAvg);
@@ -2325,7 +2415,7 @@ function loadTodayEntry(silent=false){
 /* ── WEEKLY ── */
 function initWeekly(){
   document.getElementById('ci-datum').value=today();
-  renderCIStats();renderWChart();renderWellbeingChart();renderPerfChart();renderZone2Chart();renderMuscleSetsChart();renderCIMuscleCheckin();renderCIH();loadPrevPhoto();
+  renderCIStats();renderWChart();renderWellbeingChart();renderPerfChart();renderZone2Chart();renderMuscleSetsChart();renderCIMuscleCheckin();renderCIH();loadPhotos();
   checkBackupBanner();
 }
 function checkBackupBanner(){
@@ -2552,17 +2642,30 @@ function renderCIMuscleCheckin(){
     ).join('')+`</div>`;
 }
 
-function loadPrevPhoto(){
+function _getPhotoSet(ph,wk){const v=ph[wk];if(!v)return{front:null,side:null,back:null};if(typeof v==='string')return{front:v,side:null,back:null};return{front:null,side:null,back:null,...v};}
+
+function loadPhotos(){
   const ph=dbPH();
   const thisWk=getWK(new Date());
   const prevWkDate=new Date();prevWkDate.setDate(prevWkDate.getDate()-7);
   const prevWk=getWK(prevWkDate);
-  const img=document.getElementById('ppi');
-  if(ph[prevWk]){img.src=ph[prevWk];img.style.display='block';document.getElementById('pps').querySelector('.phl')?.remove();}
-  if(ph[thisWk]){const ni=document.getElementById('pni');ni.src=ph[thisWk];ni.style.display='block';document.getElementById('pnl').style.display='none';ST.currentPhoto=ph[thisWk];}
+  const prev=_getPhotoSet(ph,prevWk);
+  const curr=_getPhotoSet(ph,thisWk);
+  ['front','side','back'].forEach(t=>{
+    const pi=document.getElementById('ppi-'+t);
+    const ph2=document.getElementById('pph-'+t);
+    if(prev[t]){if(pi){pi.src=prev[t];pi.style.display='block';}if(ph2)ph2.style.display='none';}
+    if(curr[t]){
+      const ni=document.getElementById('pni-'+t);
+      const nl=document.getElementById('pnl-'+t);
+      if(ni){ni.src=curr[t];ni.style.display='block';}
+      if(nl)nl.style.display='none';
+      ST.currentPhotos[t]=curr[t];
+    }
+  });
 }
 
-function loadPhoto(input){
+function loadPhoto(input,type){
   const file=input.files[0];if(!file)return;
   const r=new FileReader();
   r.onload=e=>{
@@ -2575,8 +2678,11 @@ function loadPhoto(input){
       let comp=cv.toDataURL('image/jpeg',0.75);
       if(comp.length>300000)comp=cv.toDataURL('image/jpeg',0.5);
       if(comp.length>300000)comp=cv.toDataURL('image/jpeg',0.3);
-      const ni=document.getElementById('pni');ni.src=comp;ni.style.display='block';
-      document.getElementById('pnl').style.display='none';ST.currentPhoto=comp;
+      const ni=document.getElementById('pni-'+type);
+      const nl=document.getElementById('pnl-'+type);
+      if(ni){ni.src=comp;ni.style.display='block';}
+      if(nl)nl.style.display='none';
+      ST.currentPhotos[type]=comp;
     };i.src=e.target.result;
   };r.readAsDataURL(file);
 }
@@ -2586,11 +2692,11 @@ function renderCIH(){
   const c=document.getElementById('checkin-history');
   if(!entries.length){c.innerHTML='<div class="empty">Noch keine Check-ins</div>';return}
   c.innerHTML=entries.map((e,i)=>{
-    const wk=getWK(new Date(e.datum));const hp=!!ph[wk];
+    const wk=getWK(new Date(e.datum));const _ps=_getPhotoSet(ph,wk);const photoCount=['front','side','back'].filter(t=>_ps[t]).length;
     return`<div class="hist-item">
       <div class="hist-head" onclick="toggleH('ch-${i}','chc-${i}')">
         <div><div class="hist-date">${fmtDate(e.datum)}</div><div class="hist-label">Ø ${e.wAvg||'—'}kg${e.kfa?' · KFA '+e.kfa+'%':''}</div></div>
-        <div class="hist-pills">${hp?'<span class="pill">Foto</span>':''}<span class="chev" id="chc-${i}">▾</span></div>
+        <div class="hist-pills">${photoCount?`<span class="pill">${photoCount} Foto${photoCount>1?'s':''}</span>`:''}<span class="chev" id="chc-${i}">▾</span></div>
       </div>
       <div class="hist-body" id="ch-${i}">
         <div class="hd">
@@ -3460,6 +3566,8 @@ function initHealth(){
     <span class="tab-lbl">Check-in</span>
   </button>
 </nav>
+
+</div><!-- end app-frame -->
 
 <!-- Wochenverlauf-Modal (Gewicht / Cardio) -->
 <div class="ta-modal-bg" id="wk-hist-modal-bg" onclick="closeWkHistModal()">
