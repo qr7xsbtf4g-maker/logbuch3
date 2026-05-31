@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Lokale Sicherungen / Design-Mockups (nicht Teil der App)
+index.backup.html
+preview-t0*.html
+
+# Lokale Tooling-Configs
+.claude/launch.json
