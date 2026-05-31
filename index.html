@@ -2977,6 +2977,20 @@ function updateRingClock(){
   if(timeEl)timeEl.textContent=`${String(h).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 }
 
+/* ── iOS-Standalone Höhenfix ──
+   Im black-translucent-Standalone meldet iOS innerHeight/100dvh zu kurz
+   (= Screen minus oberer Inset). screen.height kennt die echte Höhe.
+   Nur auf Mobile + Standalone anwenden; Desktop nutzt CSS (Grid). */
+function fitApp(){
+  const af=document.getElementById('app-frame');if(!af)return;
+  const standalone=window.navigator.standalone||window.matchMedia('(display-mode:standalone)').matches;
+  if(window.innerWidth<768&&standalone&&screen.height>window.innerHeight){
+    af.style.height=screen.height+'px';
+  }else{
+    af.style.height='';
+  }
+}
+
 /* ── HERO NUMBERS ── */
 function calcStreak(){
   const dates=new Set(db().filter(e=>e.type==='daily').map(e=>e.datum));
@@ -3442,6 +3456,7 @@ function init(){
   updateDayRing();
   updateRingClock();
   setInterval(updateRingClock,60000);
+  fitApp();
   initTodayPlan();
   setTimeout(startTicker,400);
   document.querySelectorAll('.view')[0].classList.add('active');
@@ -3465,6 +3480,8 @@ function init(){
   if(_cs&&_cs.date===today()){const _cb=document.getElementById(_cs.value==='ja'?'cardio-ja-btn':'cardio-nein-btn');if(_cb)_cb.classList.add('sel');ST.toggles['cardio']=_cs.value;}else{localStorage.removeItem('lb_cardio_tog');}
 }
 init();
+window.addEventListener('resize',fitApp);
+window.addEventListener('orientationchange',()=>setTimeout(fitApp,100));
 
 // Ripple-Effekt auf interaktiven Buttons
 (function(){
@@ -3594,9 +3611,10 @@ function initHealth(){
   function upd(){
     var d=document.getElementById('__dbg');if(!d)return;
     var p=document.getElementById('__dvhprobe'),af=document.getElementById('app-frame'),tb=document.querySelector('.tab-bar');
-    d.textContent='iH '+window.innerHeight+'  dvh '+(p?p.offsetHeight:'-')+'  scr '+screen.height
-      +'\nvv '+(window.visualViewport?Math.round(window.visualViewport.height):'-')
-      +'\nappF '+(af?Math.round(af.getBoundingClientRect().height):'-')+'  tabBot '+(tb?Math.round(tb.getBoundingClientRect().bottom):'-');
+    var sa=(window.navigator.standalone||window.matchMedia('(display-mode:standalone)').matches)?1:0;
+    d.textContent='iH '+window.innerHeight+'  dvh '+(p?p.offsetHeight:'-')+'  scr '+screen.height+'  sa'+sa
+      +'\nappF '+(af?Math.round(af.getBoundingClientRect().height):'-')+'  tabBot '+(tb?Math.round(tb.getBoundingClientRect().bottom):'-')
+      +'  gap '+(tb?Math.round(screen.height-tb.getBoundingClientRect().bottom):'-');
   }
   window.addEventListener('resize',upd);
   window.visualViewport&&window.visualViewport.addEventListener('resize',upd);
