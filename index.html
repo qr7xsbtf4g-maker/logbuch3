@@ -18,7 +18,7 @@
 html{background-color:#E8E3D8}
 html,body{height:100%;overflow:hidden;color:var(--tx);font-family:'Geist',sans-serif;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
 body{background:#E8E3D8}
-#app-frame{position:fixed;inset:0;display:flex;flex-direction:column}
+#app-frame{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 #swipe-container{flex:1;min-height:0;overflow:hidden}
 
 /* SPLASH */
@@ -2953,8 +2953,7 @@ function updateDayRing(){
     if(s.training||s.daily) fg='#6BE3A4';      // Tag erledigt (Training ODER Daily) = grün
     else if(isToday) fg='rgba(255,255,255,0.22)'; // heute, noch nichts geloggt
     if(fg){
-      const sw=isToday?7:6;
-      html+=`<circle cx="60" cy="60" r="${r}" fill="none" stroke="${fg}" stroke-width="${sw}" stroke-linecap="round" ${da} ${tf} style="transition:stroke .4s"/>`;
+      html+=`<circle cx="60" cy="60" r="${r}" fill="none" stroke="${fg}" stroke-width="6" stroke-linecap="round" ${da} ${tf} style="transition:stroke .4s"/>`;
     }
     if(s.training){                             // Trainingstag: dezenter Akzentpunkt auf dem Segment
       const mid=(-90+i*slotDeg+segDeg/2)*Math.PI/180;
@@ -3586,6 +3585,24 @@ function initHealth(){
 </nav>
 
 </div><!-- end app-frame -->
+
+<!-- TEMP DEBUG — wird nach Diagnose wieder entfernt -->
+<div id="__dvhprobe" style="position:fixed;left:-9999px;top:0;width:1px;height:100dvh"></div>
+<div id="__dbg" style="position:fixed;left:6px;bottom:6px;z-index:99999;background:rgba(0,0,0,0.82);color:#5f6;font:11px/1.35 monospace;padding:5px 7px;border-radius:5px;white-space:pre;pointer-events:none"></div>
+<script>
+(function(){
+  function upd(){
+    var d=document.getElementById('__dbg');if(!d)return;
+    var p=document.getElementById('__dvhprobe'),af=document.getElementById('app-frame'),tb=document.querySelector('.tab-bar');
+    d.textContent='iH '+window.innerHeight+'  dvh '+(p?p.offsetHeight:'-')+'  scr '+screen.height
+      +'\nvv '+(window.visualViewport?Math.round(window.visualViewport.height):'-')
+      +'\nappF '+(af?Math.round(af.getBoundingClientRect().height):'-')+'  tabBot '+(tb?Math.round(tb.getBoundingClientRect().bottom):'-');
+  }
+  window.addEventListener('resize',upd);
+  window.visualViewport&&window.visualViewport.addEventListener('resize',upd);
+  setTimeout(upd,300);setTimeout(upd,1500);
+})();
+</script>
 
 <!-- Wochenverlauf-Modal (Gewicht / Cardio) -->
 <div class="ta-modal-bg" id="wk-hist-modal-bg" onclick="closeWkHistModal()">
