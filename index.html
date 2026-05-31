@@ -44,7 +44,7 @@ body{background:#E8E3D8}
 .view.active{display:block}
 
 /* ── BOTTOM TAB BAR ── */
-.tab-bar{flex-shrink:0;z-index:200;display:flex;align-items:center;gap:4px;padding:4px 10px env(safe-area-inset-bottom,0px);background:var(--bg);border-top:1px solid var(--bd)}
+.tab-bar{flex-shrink:0;z-index:200;display:flex;align-items:center;gap:4px;padding:4px 10px 8px;background:var(--bg);border-top:1px solid var(--bd)}
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 6px;border:none;background:transparent;border-radius:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s,transform .25s cubic-bezier(0.34,1.56,0.64,1);position:relative}
 .tab-btn:active{transform:scale(0.86)}
 .tab-btn.active{background:rgba(200,100,60,0.1)}
@@ -3602,26 +3602,6 @@ function initHealth(){
 </nav>
 
 </div><!-- end app-frame -->
-
-<!-- TEMP DEBUG — wird nach Diagnose wieder entfernt -->
-<div id="__sabprobe" style="position:fixed;left:-9999px;bottom:0;width:1px;height:env(safe-area-inset-bottom,0px)"></div>
-<div id="__dbg" style="position:fixed;left:6px;top:64px;z-index:99999;background:rgba(0,0,0,0.82);color:#5f6;font:11px/1.35 monospace;padding:5px 7px;border-radius:5px;white-space:pre;pointer-events:none"></div>
-<script>
-(function(){
-  function upd(){
-    var d=document.getElementById('__dbg');if(!d)return;
-    var sab=document.getElementById('__sabprobe'),af=document.getElementById('app-frame'),tb=document.querySelector('.tab-bar');
-    var btn=document.querySelector('.tab-btn'),lbl=btn?btn.querySelector('.tab-lbl'):null;
-    var sa=(window.navigator.standalone||window.matchMedia('(display-mode:standalone)').matches)?1:0;
-    d.textContent='scr '+screen.height+'  iH '+window.innerHeight+'  sa'+sa+'  sab '+(sab?sab.offsetHeight:'-')
-      +'\nappF '+(af?Math.round(af.getBoundingClientRect().height):'-')+'  tbTop '+(tb?Math.round(tb.getBoundingClientRect().top):'-')+'  tbBot '+(tb?Math.round(tb.getBoundingClientRect().bottom):'-')
-      +'\nlblBot '+(lbl?Math.round(lbl.getBoundingClientRect().bottom):'-');
-  }
-  window.addEventListener('resize',upd);
-  window.visualViewport&&window.visualViewport.addEventListener('resize',upd);
-  setTimeout(upd,300);setTimeout(upd,1500);
-})();
-</script>
 
 <!-- Wochenverlauf-Modal (Gewicht / Cardio) -->
 <div class="ta-modal-bg" id="wk-hist-modal-bg" onclick="closeWkHistModal()">
