@@ -805,7 +805,7 @@ body{background:#E8E3D8}
     <div class="sh">Trainingsqualität & Notizen</div>
     <div class="card">
       <div class="slider-wrap"><div class="lbl">Trainingsqualität</div><div class="slider-row"><input type="range" min="1" max="10" value="1" step="1" id="sl-perf" oninput="updSl('perf')"><span class="slider-val" id="sv-perf">1</span><span class="slider-max">/10</span></div></div>
-      <div class="f"><label>Notizen zur Einheit</label><textarea id="t-notizen" placeholder="Wie lief die Einheit? Besonderheiten..."></textarea></div>
+      <div class="f"><label>Notizen zur Einheit</label><textarea id="t-notizen" placeholder="Wie lief die Einheit? Besonderheiten..." oninput="scheduleTrainDraft()"></textarea></div>
     </div>
     <button class="save-btn" onclick="saveTraining(this)">Krafttraining speichern</button>
   </div>
@@ -1229,7 +1229,7 @@ function undoRmSet(){const t=document.getElementById('toast');t.classList.remove
 function btnOk(btn){if(!btn)return;const orig=btn.textContent;btn.textContent='✓ Gespeichert';btn.style.background='var(--ok)';btn.style.borderColor='var(--okl)';btn.style.color='#fff';setTimeout(()=>{btn.textContent=orig;btn.style.background='';btn.style.borderColor='';btn.style.color='';},1600);}
 function fmtDate(s){if(!s)return'—';const[y,m,d]=s.split('-');return`${d}.${m}.${y}`}
 function today(){const t=new Date();return`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`}
-function updSl(id){document.getElementById('sv-'+id).textContent=document.getElementById('sl-'+id).value}
+function updSl(id){document.getElementById('sv-'+id).textContent=document.getElementById('sl-'+id).value;if(id==='perf'&&ST.split)scheduleTrainDraft();}
 function tog(k,btn){const was=btn.classList.contains('sel');btn.closest('.tog-row').querySelectorAll('.tog-btn').forEach(b=>b.classList.remove('sel'));if(!was){btn.classList.add('sel');ST.toggles[k]=btn.classList.contains('yes')?'ja':'nein';}else{delete ST.toggles[k];}}
 function togCardio(v,btn){const was=btn.classList.contains('sel');btn.closest('.tog-row').querySelectorAll('.tog-btn').forEach(b=>b.classList.remove('sel'));if(!was){btn.classList.add('sel');document.getElementById('cardio-details').style.display=v==='ja'?'block':'none';document.getElementById('cardio-save-btn').style.display=v==='ja'?'block':'none';ST.toggles['cardio']=v;localStorage.setItem('lb_cardio_tog',JSON.stringify({date:today(),value:v}));}else{document.getElementById('cardio-details').style.display='none';document.getElementById('cardio-save-btn').style.display='none';delete ST.toggles['cardio'];localStorage.removeItem('lb_cardio_tog');}}
 function togKraft(v,btn){const was=btn.classList.contains('sel');btn.closest('.tog-row').querySelectorAll('.tog-btn').forEach(b=>b.classList.remove('sel'));if(!was){btn.classList.add('sel');document.getElementById('kraft-section').style.display=v==='ja'?'block':'none';ST.toggles['kraft']=v;localStorage.setItem('lb_kraft_tog',JSON.stringify({date:today(),value:v}));if(v==='ja'&&ST._todaySplit&&!ST.split){const _sb=document.querySelector(`.split-btn[onclick="selSplit('${ST._todaySplit}',this)"]`);if(_sb)selSplit(ST._todaySplit,_sb);}}else{document.getElementById('kraft-section').style.display='none';delete ST.toggles['kraft'];localStorage.removeItem('lb_kraft_tog');}}
@@ -1249,10 +1249,11 @@ function goTab(idx){
 }
 
 /* ── BACKGROUND TIMER PERSISTENCE ── */
-window.addEventListener('beforeunload',()=>autoSaveDaily());
+window.addEventListener('beforeunload',()=>{autoSaveDaily();saveTrainDraft();});
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden){
     autoSaveDaily();
+    saveTrainDraft();
     // Alle aktiven Pausen-Timer sichern
     const bgR={};
     Object.keys(rests).forEach(id=>{
@@ -1389,6 +1390,7 @@ function onSetInput(ei,si,el){
   updateSetProg(ei,si);
   updateExDone(ei);
   updTV();
+  scheduleTrainDraft();
 }
 
 function updateExDone(ei){
@@ -1598,6 +1600,7 @@ function selArm(ei,arm,btn){
   ST.exSets[ei].arm=arm;
   document.getElementById('arm-l-'+ei)?.classList.toggle('sel',arm==='links');
   document.getElementById('arm-r-'+ei)?.classList.toggle('sel',arm==='rechts');
+  saveTrainDraft();
 }
 
 function moveEx(ei,dir){
@@ -1654,6 +1657,7 @@ function addSet(ei){
   const uni=ST.exSets[ei]?.uni||false;
   w.insertAdjacentHTML('beforeend',mkSet(ei,si,uni));
   ST.exSets[ei].sets++;
+  saveTrainDraft();
 }
 
 function rmSet(ei,si){
@@ -1663,6 +1667,7 @@ function rmSet(ei,si){
   stopTimer(`${ei}-${si}`);
   renumSets(ei);calcVol(ei);
   showUndoToast('Satz gelöscht');
+  saveTrainDraft();
 }
 
 function renumSets(ei){
@@ -1737,6 +1742,65 @@ function getExData(){
     const prog=autoProg(ex.name,vol);
     return{name:ex.name,muscle:ex.muscle,uni:ex.uni,arm:ex.arm,sets,vol:Math.round(vol),prog};
   }).filter(e=>e.name);
+}
+
+/* ── TRAININGS-ENTWURF (Crash-Schutz: Eingaben mitten im Training überleben App-Schließen) ── */
+let _tdTimer=null;
+function scheduleTrainDraft(){clearTimeout(_tdTimer);_tdTimer=setTimeout(saveTrainDraft,600);}
+function saveTrainDraft(){
+  if(!ST.split){localStorage.removeItem('lb_train_draft');return;}
+  const ex={};
+  Object.keys(ST.exSets).forEach(i=>{
+    const w=document.getElementById('sw-'+i);if(!w)return;
+    const sets=[];
+    w.querySelectorAll('.set-item').forEach(item=>{
+      sets.push({kg:item.querySelector('[id^="kg-"]')?.value||'',reps:item.querySelector('[id^="rp-"]')?.value||''});
+    });
+    ex[i]={sets,arm:ST.exSets[i]?.arm||'links'};
+  });
+  const draft={datum:today(),gym:ST.gym,split:ST.split,swapOverrides:ST.swapOverrides||{},
+    perf:document.getElementById('sl-perf')?.value,
+    notizen:document.getElementById('t-notizen')?.value||'',ex};
+  try{localStorage.setItem('lb_train_draft',JSON.stringify(draft));}catch(e){}
+}
+function clearTrainDraft(){clearTimeout(_tdTimer);localStorage.removeItem('lb_train_draft');}
+function restoreTrainDraft(){
+  const raw=localStorage.getItem('lb_train_draft');if(!raw)return;
+  let draft;try{draft=JSON.parse(raw);}catch(e){localStorage.removeItem('lb_train_draft');return;}
+  if(!draft||draft.datum!==today()||!draft.split){localStorage.removeItem('lb_train_draft');return;}
+  if(db().some(e=>e.type==='training'&&e.datum===today())){localStorage.removeItem('lb_train_draft');return;}
+  ST.toggles['kraft']='ja';
+  document.getElementById('kraft-ja-btn')?.classList.add('sel');
+  document.getElementById('kraft-nein-btn')?.classList.remove('sel');
+  const ksec=document.getElementById('kraft-section');if(ksec)ksec.style.display='block';
+  if(typeof draft.gym==='number')ST.gym=draft.gym;
+  document.querySelectorAll('.gym-btn').forEach(b=>b.classList.toggle('sel',parseInt(b.dataset.gym)===ST.gym));
+  ST.swapOverrides=draft.swapOverrides||{};
+  ST.split=draft.split;
+  document.querySelectorAll('.split-btn').forEach(b=>b.classList.remove('sel'));
+  document.querySelector(`.split-btn[onclick="selSplit('${draft.split}',this)"]`)?.classList.add('sel');
+  buildEx(draft.split);
+  setTimeout(()=>{
+    Object.keys(draft.ex||{}).forEach(ei=>{
+      const saved=draft.ex[ei];if(!saved)return;
+      let w=document.getElementById('sw-'+ei);if(!w)return;
+      let cur=w.querySelectorAll('.set-item').length;
+      while(cur<saved.sets.length){addSet(parseInt(ei));cur++;}
+      w=document.getElementById('sw-'+ei);
+      w.querySelectorAll('.set-item').forEach((item,si)=>{
+        if(!saved.sets[si])return;
+        const kgEl=item.querySelector('[id^="kg-"]');const rpEl=item.querySelector('[id^="rp-"]');
+        if(kgEl&&saved.sets[si].kg){kgEl.value=saved.sets[si].kg;kgEl.classList.remove('prefilled');}
+        if(rpEl&&saved.sets[si].reps){rpEl.value=saved.sets[si].reps;rpEl.classList.remove('prefilled');}
+      });
+      if(saved.arm==='rechts')selArm(parseInt(ei),'rechts',document.getElementById('arm-r-'+ei));
+    });
+    if(draft.perf){const p=document.getElementById('sl-perf');if(p){p.value=draft.perf;updSl('perf');}}
+    if(draft.notizen){const n=document.getElementById('t-notizen');if(n)n.value=draft.notizen;}
+    if(typeof updTV==='function')updTV();
+    if(typeof initExerciseDots==='function')initExerciseDots();
+    toast('Trainings-Entwurf von heute wiederhergestellt');
+  },80);
 }
 
 /* ── SAVE ── */
@@ -2044,7 +2108,7 @@ function saveTraining(btn=null){
     performance:document.getElementById('sl-perf').value,
     notizen:document.getElementById('t-notizen').value,
     exercises,totalVol:exercises.reduce((a,e)=>a+e.vol,0)};
-  const d=db();d.unshift(e);dbS(d);btnOk(btn);renderTH();updateDayRing();markTodayTrainingDone();
+  const d=db();d.unshift(e);dbS(d);clearTrainDraft();btnOk(btn);renderTH();updateDayRing();markTodayTrainingDone();
   const swapKeys=Object.keys(ST.swapOverrides||{});
   if(swapKeys.length>0){openPlanConfirmModal();}
   else{toast('Krafttraining gespeichert!');resetTraining();}
@@ -2195,6 +2259,7 @@ function resetTraining(){
   document.getElementById('sl-perf').value=1;updSl('perf');
   document.getElementById('kraft-section').style.display='none';
   ST.split=null;ST.exSets={};rests={};ST.sessionOrder=null;ST.swapOverrides={};
+  clearTrainDraft();
   // Cardio-Bereich NICHT zurücksetzen — bleibt für eigenständige Cardio-Erfassung
 }
 
@@ -3478,6 +3543,7 @@ function init(){
   if(_ks&&_ks.date===today()){const _kb=document.getElementById(_ks.value==='ja'?'kraft-ja-btn':'kraft-nein-btn');if(_kb)_kb.classList.add('sel');ST.toggles['kraft']=_ks.value;}else{localStorage.removeItem('lb_kraft_tog');}
   const _cs=JSON.parse(localStorage.getItem('lb_cardio_tog')||'null');
   if(_cs&&_cs.date===today()){const _cb=document.getElementById(_cs.value==='ja'?'cardio-ja-btn':'cardio-nein-btn');if(_cb)_cb.classList.add('sel');ST.toggles['cardio']=_cs.value;}else{localStorage.removeItem('lb_cardio_tog');}
+  restoreTrainDraft();
 }
 init();
 
