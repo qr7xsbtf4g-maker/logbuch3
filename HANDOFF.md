@@ -20,7 +20,56 @@
 
 ---
 
-## Was in der letzten Session erledigt wurde (31. Mai 2026)
+## Was in der letzten Session erledigt wurde (1. Juni 2026)
+
+### Status-Bar-Saga (oben creme) — iOS-Grenze erreicht
+
+**Ziel:** obere iOS-Statusleiste in App-Farbe (creme) statt schwarz.
+
+**Erkenntnis (recherchiert + am Gerät getestet):** Dustins iPhone ist im **Dark Mode**.
+- `default`/`black` → Statusleiste im Dark Mode IMMER schwarz (`color-scheme:light` hilft nicht).
+- `black-translucent` → einzige Option für creme Top (Inhalt scheint hinter der
+  transparenten Leiste durch). Schrift bleibt weiß (iOS-fest, auf creme etwas blass).
+
+**Aktueller Stand:** `apple-mobile-web-app-status-bar-style: black-translucent`
+(+ `color-scheme:light`, theme-color creme für hell & dunkel). **Oben creme = erledigt.**
+
+**Ungelöst / iOS-Grenze:** black-translucent meldet `innerHeight`/`100dvh` = **812**,
+echter Screen = **874** (iPhone 16 Pro). Die 62px Differenz = creme Zone unten.
+- `fitApp()` (app-frame = screen.height) füllt sie, schneidet aber die Tab-Labels ab → **entfernt**.
+- Ohne fitApp: Tabs sichtbar, aber ~62px creme Zone unter der Bar (Home-Indikator-Bereich).
+- **Fazit: creme oben UND bündig unten gleichzeitig lässt iOS im Dark Mode NICHT zu.**
+  Dustin hat das akzeptiert / vorerst so gelassen. `border-top` der Tab-Bar entfernt
+  (nahtloser Übergang). KEINE weiteren fitApp-/black-translucent-Experimente ohne neue Idee.
+
+**WICHTIG:** `status-bar-style` wirkt nur nach **Entfernen + Neu-Hinzufügen** der Home-App.
+Dabei **löscht iOS den localStorage** → Daten gingen verloren (Streak war auf 1).
+→ Vor jedem Re-Add **Check-In → Export**, danach Import. Cache-Test via Safari `?v=N`.
+
+### Check-In-Tab entrümpelt (R2)
+
+WEEKLY-View (`index.html:~893`) war 9 lose Karten. Jetzt **4 Abschnitte mit Überschriften**
+(`.sh`) in Dustins Prioritäts-Reihenfolge:
+- **Körper** → Gewichtsverlauf (offen by default), Wochenvergleich
+- **Wohlbefinden** → Schlaf & Energie, Zone 2, Wochenschnitt Daily
+- **Training** → Trainingsqualität, Muskelgruppen
+- **Wöchentliche Eingabe** → Check-in, Verlauf, Daten
+
+Reine HTML-Umsortierung, alle Charts/Funktionen unverändert. Oben weiter Quick-Score + Wochenschnitt.
+
+### OFFEN — nächste Schritte (Reihenfolge)
+
+1. **Check-In R2 verfeinern** (optional): Top-Übersicht prägnanter, wichtigste Körper-Zahlen
+   (Gewicht-Diff, KFA-Trend) ohne Aufklappen sichtbar? Mehr standardmäßig offen? → Dustin fragen.
+2. **R3 Slides → App:** Dustin liefert Trainings-/Schlaf-Folien als PNG. Claude liest Bilder
+   direkt, extrahiert Prinzipien → Ziele: Tages-Impuls/Wissens-Tipps + Training-Logik +
+   Schlaf-Empfehlungen. (Bei Supplement-Bezug erst `/supplement-stack-check`.)
+3. **Phase B** (Features): F0 Apple-Health-Sync (Kurzbefehl-Brücke), F1 Insight-Loop,
+   F2 Top-3 + Wenn-Dann, F3 Deep-Work-Timer, F4 Koffein-Cutoff. (Details im Planfile.)
+
+---
+
+## Was in der vorletzten Session erledigt wurde (31. Mai 2026)
 
 ### Tab-Bar bündig unten — ENDGÜLTIG GELÖST (iPhone 16 Pro Standalone)
 
