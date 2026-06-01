@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Dashboard">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" type="image/png" href="icon.png">
@@ -44,7 +44,7 @@ body{background:#E8E3D8}
 .view.active{display:block}
 
 /* ── BOTTOM TAB BAR ── */
-.tab-bar{flex-shrink:0;z-index:200;display:flex;align-items:center;gap:4px;padding:4px 10px 8px;background:var(--bg);border-top:1px solid var(--bd)}
+.tab-bar{flex-shrink:0;z-index:200;display:flex;align-items:center;gap:4px;padding:4px 10px env(safe-area-inset-bottom,8px);background:var(--bg);border-top:1px solid var(--bd)}
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 6px;border:none;background:transparent;border-radius:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s,transform .25s cubic-bezier(0.34,1.56,0.64,1);position:relative}
 .tab-btn:active{transform:scale(0.86)}
 .tab-btn.active{background:rgba(200,100,60,0.1)}
@@ -2977,6 +2977,19 @@ function updateRingClock(){
   if(timeEl)timeEl.textContent=`${String(h).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 }
 
+/* ── iOS-Standalone Höhenfix ──
+   black-translucent meldet innerHeight/100dvh zu kurz (= Screen minus oberer
+   Inset). screen.height kennt die echte Höhe → schließt den unteren 62px-Spalt.
+   Nur Mobile + Standalone; Desktop nutzt CSS (Grid). */
+function fitApp(){
+  const af=document.getElementById('app-frame');if(!af)return;
+  const standalone=window.navigator.standalone||window.matchMedia('(display-mode:standalone)').matches;
+  if(window.innerWidth<768&&standalone&&screen.height>window.innerHeight){
+    af.style.height=screen.height+'px';
+  }else{
+    af.style.height='';
+  }
+}
 
 /* ── HERO NUMBERS ── */
 function calcStreak(){
@@ -3443,6 +3456,7 @@ function init(){
   updateDayRing();
   updateRingClock();
   setInterval(updateRingClock,60000);
+  fitApp();
   initTodayPlan();
   setTimeout(startTicker,400);
   document.querySelectorAll('.view')[0].classList.add('active');
@@ -3466,6 +3480,8 @@ function init(){
   if(_cs&&_cs.date===today()){const _cb=document.getElementById(_cs.value==='ja'?'cardio-ja-btn':'cardio-nein-btn');if(_cb)_cb.classList.add('sel');ST.toggles['cardio']=_cs.value;}else{localStorage.removeItem('lb_cardio_tog');}
 }
 init();
+window.addEventListener('resize',fitApp);
+window.addEventListener('orientationchange',()=>setTimeout(fitApp,100));
 
 // Ripple-Effekt auf interaktiven Buttons
 (function(){
