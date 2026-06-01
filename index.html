@@ -4,11 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
 <meta name="apple-mobile-web-app-title" content="Dashboard">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" type="image/png" href="icon.png">
 <meta name="theme-color" content="#E8E3D8">
+<meta name="theme-color" content="#E8E3D8" media="(prefers-color-scheme: dark)">
 <title>Dashboard · DJI</title>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -2977,20 +2980,6 @@ function updateRingClock(){
   if(timeEl)timeEl.textContent=`${String(h).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 }
 
-/* ── iOS-Standalone Höhenfix ──
-   black-translucent meldet innerHeight/100dvh zu kurz (= Screen minus oberer
-   Inset). screen.height kennt die echte Höhe → schließt den unteren 62px-Spalt.
-   Nur Mobile + Standalone; Desktop nutzt CSS (Grid). */
-function fitApp(){
-  const af=document.getElementById('app-frame');if(!af)return;
-  const standalone=window.navigator.standalone||window.matchMedia('(display-mode:standalone)').matches;
-  if(window.innerWidth<768&&standalone&&screen.height>window.innerHeight){
-    af.style.height=screen.height+'px';
-  }else{
-    af.style.height='';
-  }
-}
-
 /* ── HERO NUMBERS ── */
 function calcStreak(){
   const dates=new Set(db().filter(e=>e.type==='daily').map(e=>e.datum));
@@ -3456,7 +3445,6 @@ function init(){
   updateDayRing();
   updateRingClock();
   setInterval(updateRingClock,60000);
-  fitApp();
   initTodayPlan();
   setTimeout(startTicker,400);
   document.querySelectorAll('.view')[0].classList.add('active');
@@ -3480,8 +3468,6 @@ function init(){
   if(_cs&&_cs.date===today()){const _cb=document.getElementById(_cs.value==='ja'?'cardio-ja-btn':'cardio-nein-btn');if(_cb)_cb.classList.add('sel');ST.toggles['cardio']=_cs.value;}else{localStorage.removeItem('lb_cardio_tog');}
 }
 init();
-window.addEventListener('resize',fitApp);
-window.addEventListener('orientationchange',()=>setTimeout(fitApp,100));
 
 // Ripple-Effekt auf interaktiven Buttons
 (function(){
