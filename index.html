@@ -2980,20 +2980,6 @@ function updateRingClock(){
   if(timeEl)timeEl.textContent=`${String(h).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 }
 
-/* ── iOS-Standalone Höhenfix (black-translucent) ──
-   black-translucent meldet innerHeight/100dvh zu kurz (Screen minus oberer
-   Inset) → unten 62px Spalt. screen.height kennt die echte Höhe.
-   Nur Mobile + Standalone; Desktop nutzt CSS. */
-function fitApp(){
-  const af=document.getElementById('app-frame');if(!af)return;
-  const standalone=window.navigator.standalone||window.matchMedia('(display-mode:standalone)').matches;
-  if(window.innerWidth<768&&standalone&&screen.height>window.innerHeight){
-    af.style.height=screen.height+'px';
-  }else{
-    af.style.height='';
-  }
-}
-
 /* ── HERO NUMBERS ── */
 function calcStreak(){
   const dates=new Set(db().filter(e=>e.type==='daily').map(e=>e.datum));
@@ -3459,7 +3445,6 @@ function init(){
   updateDayRing();
   updateRingClock();
   setInterval(updateRingClock,60000);
-  fitApp();
   initTodayPlan();
   setTimeout(startTicker,400);
   document.querySelectorAll('.view')[0].classList.add('active');
@@ -3483,8 +3468,6 @@ function init(){
   if(_cs&&_cs.date===today()){const _cb=document.getElementById(_cs.value==='ja'?'cardio-ja-btn':'cardio-nein-btn');if(_cb)_cb.classList.add('sel');ST.toggles['cardio']=_cs.value;}else{localStorage.removeItem('lb_cardio_tog');}
 }
 init();
-window.addEventListener('resize',fitApp);
-window.addEventListener('orientationchange',()=>setTimeout(fitApp,100));
 
 // Ripple-Effekt auf interaktiven Buttons
 (function(){
