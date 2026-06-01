@@ -913,19 +913,35 @@ body{background:#E8E3D8}
   <div class="sh">Wochenschnitt</div>
   <div class="stat-grid" id="ci-stats" style="grid-template-columns:1fr 1fr"></div>
 
+  <!-- ── 1. KÖRPER ── -->
+  <div class="sh">Körper</div>
+
   <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wc-body','wc-chev')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Gewichtsverlauf</span>
-      <span class="chev" id="wc-chev">▾</span>
+      <span class="chev open" id="wc-chev">▾</span>
     </div>
-    <div class="ex-section-body" id="wc-body" style="padding:0 12px 12px">
+    <div class="ex-section-body open" id="wc-body" style="padding:0 12px 12px">
       <div class="chart-wrap" style="height:200px"><canvas id="weight-chart"></canvas></div>
     </div>
   </div>
 
   <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
+    <div class="ex-section-head" onclick="toggleSec('wbs-trend','wbsc-trend')" style="padding:12px 14px;border-top:none">
+      <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Wochenvergleich (Gewicht / Umfänge)</span>
+      <span class="chev" id="wbsc-trend">▾</span>
+    </div>
+    <div class="ex-section-body" id="wbs-trend" style="padding:8px 10px 12px">
+      <div id="ci-trend"></div>
+    </div>
+  </div>
+
+  <!-- ── 2. WOHLBEFINDEN ── -->
+  <div class="sh">Wohlbefinden</div>
+
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-wellbeing','wbsc-wellbeing')" style="padding:12px 14px;border-top:none">
-      <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Wohlbefinden</span>
+      <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Schlaf &amp; Energie</span>
       <span class="chev" id="wbsc-wellbeing">▾</span>
     </div>
     <div class="ex-section-body" id="wbs-wellbeing" style="padding:0 12px 12px">
@@ -934,16 +950,6 @@ body{background:#E8E3D8}
         <span style="font-family:'Geist',sans-serif;font-size:9px;color:var(--gold);display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:var(--gold);border-radius:2px"></span>Energie</span>
       </div>
       <div class="chart-wrap" style="height:150px"><canvas id="wellbeing-chart"></canvas></div>
-    </div>
-  </div>
-
-  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
-    <div class="ex-section-head" onclick="toggleSec('wbs-perf','wbsc-perf')" style="padding:12px 14px;border-top:none">
-      <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Trainingsqualität Trend</span>
-      <span class="chev" id="wbsc-perf">▾</span>
-    </div>
-    <div class="ex-section-body" id="wbs-perf" style="padding:0 12px 12px">
-      <div class="chart-wrap" style="height:140px"><canvas id="perf-chart"></canvas></div>
     </div>
   </div>
 
@@ -958,16 +964,6 @@ body{background:#E8E3D8}
   </div>
 
   <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
-    <div class="ex-section-head" onclick="toggleSec('wbs-musclesets','wbsc-musclesets')" style="padding:12px 14px;border-top:none">
-      <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Muskelgruppen / Woche</span>
-      <span class="chev" id="wbsc-musclesets">▾</span>
-    </div>
-    <div class="ex-section-body" id="wbs-musclesets" style="padding:0 12px 12px">
-      <div class="chart-wrap" style="height:180px"><canvas id="muscle-sets-chart"></canvas></div>
-    </div>
-  </div>
-
-  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-daily','wbsc-daily')" style="padding:12px 14px;border-top:none">
       <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Wochenschnitt Daily</span>
       <span class="chev" id="wbsc-daily">▾</span>
@@ -978,15 +974,31 @@ body{background:#E8E3D8}
     </div>
   </div>
 
+  <!-- ── 3. TRAINING ── -->
+  <div class="sh">Training</div>
+
   <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
-    <div class="ex-section-head" onclick="toggleSec('wbs-trend','wbsc-trend')" style="padding:12px 14px;border-top:none">
-      <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Wochenvergleich</span>
-      <span class="chev" id="wbsc-trend">▾</span>
+    <div class="ex-section-head" onclick="toggleSec('wbs-perf','wbsc-perf')" style="padding:12px 14px;border-top:none">
+      <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Trainingsqualität Trend</span>
+      <span class="chev" id="wbsc-perf">▾</span>
     </div>
-    <div class="ex-section-body" id="wbs-trend" style="padding:8px 10px 12px">
-      <div id="ci-trend"></div>
+    <div class="ex-section-body" id="wbs-perf" style="padding:0 12px 12px">
+      <div class="chart-wrap" style="height:140px"><canvas id="perf-chart"></canvas></div>
     </div>
   </div>
+
+  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
+    <div class="ex-section-head" onclick="toggleSec('wbs-musclesets','wbsc-musclesets')" style="padding:12px 14px;border-top:none">
+      <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Muskelgruppen / Woche</span>
+      <span class="chev" id="wbsc-musclesets">▾</span>
+    </div>
+    <div class="ex-section-body" id="wbs-musclesets" style="padding:0 12px 12px">
+      <div class="chart-wrap" style="height:180px"><canvas id="muscle-sets-chart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ── 4. WÖCHENTLICHE EINGABE ── -->
+  <div class="sh">Wöchentliche Eingabe</div>
 
   <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-koerper','wbsc-koerper')" style="padding:12px 14px;border-top:none">
