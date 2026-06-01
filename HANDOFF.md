@@ -20,7 +20,77 @@
 
 ---
 
-## Was in der letzten Session erledigt wurde (28. Mai 2026)
+## Was in der letzten Session erledigt wurde (31. Mai 2026)
+
+### Tab-Bar bündig unten — ENDGÜLTIG GELÖST (iPhone 16 Pro Standalone)
+
+**Symptom:** Tab-Bar schwebte zu weit oben, großer Cream-Streifen bis zum Rand.
+
+**Wahre Ursache (per On-Device-Debug-Overlay gefunden, nicht geraten):**
+`apple-mobile-web-app-status-bar-style: black-translucent` positioniert den
+Viewport (812px) **oben** am Screen (874px) → unten bleiben **62px tot**.
+`innerHeight`/`100dvh`/`100vh`/`visualViewport` melden ALLE 812; nur `screen.height`
+kennt die echten 874. Deshalb scheiterten alle früheren CSS-Höhen-Fixes.
+
+**Lösung:**
+- `status-bar-style: black-translucent → default` → Viewport sitzt jetzt bündig
+  unten am Rand, kein Phantom-Gap. (Oben dafür normale Creme-Statusleiste.)
+- Tab-Bar = normales Flex-Kind (`flex-shrink:0`, kein `position:fixed`),
+  `padding-bottom: 8px` (flach, kein Safe-Area-Cream-Streifen mehr).
+- `#app-frame{height:100vh;height:100dvh;overflow:hidden}`, reine Flex-Spalte.
+- `.view` padding-bottom 16px (alter 74px-Overlap-Hack raus).
+- **WICHTIG:** `status-bar-style` wird von iOS nur beim Installieren gelesen →
+  nach Änderung App vom Home-Bildschirm entfernen + neu hinzufügen.
+
+**NIE WIEDER:** `black-translucent`, `position:fixed` auf Bar/Container verschachteln,
+oder innerHeight/vh/dvh für die Höhe vertrauen. Ein `fitApp()`-screen.height-Hack
+wurde probiert und wieder entfernt (Symptombehandlung).
+
+### Wochenring saniert
+
+- **Doppelte „7/7" entfernt:** Eyebrow (`#ring-phase`/`#ring-time`) wurde von
+  `updateDayRing()` zweckentfremdet. Jetzt eigene `updateRingClock()` → echte
+  Tagesphase (NACHT/MORGEN/TAG/ABEND) + Uhrzeit, Minuten-Takt.
+- **Farb-Logik:** Tag erledigt (Training ODER Daily) = grün (vorher zweifarbig
+  grün/orange → sah bei voller Woche „halb kaputt" aus). Trainingstage = dezenter
+  dunkler Akzentpunkt aufs Segment.
+- **Glow-Filter entfernt**, alle Segmente einheitlich `stroke-width 6` (vorher war
+  heutiges dicker → wirkte oben unbündig).
+
+### Aufräumen + Sonstiges
+
+- `.gitignore` angelegt (`.DS_Store`, `index.backup.html`, `preview-t0*.html`,
+  `.claude/launch.json`). Dateien NICHT gelöscht, nur ignoriert (Dustins Wunsch).
+- `.claude/launch.json` für lokalen Preview-Server (python http.server 8742) angelegt.
+
+### Strategie-Entscheidung
+
+**Weiterbauen, nicht neu aufsetzen.** Substanz (Datenmodell, Trainingslogik, Charts,
+Supps) funktioniert; Probleme waren Oberflächen-Bugs. Rewrite = Falle.
+
+### OFFEN — Phase B (Features, von Dustin gewählt, eigene Runde)
+
+Reihenfolge: F0 → F1 → F2/F3/F4. (#5 Morgenlicht / #6 Atem-Reset bewusst raus.)
+- **F0 Apple-Health-Read-Sync:** PWA kann HealthKit NICHT direkt lesen. Lösung:
+  Kurzbefehl-Brücke (`shortcuts://` wie bestehendes `writeToHealth()`, rückwärts)
+  liest Schritte/Schlaf/Ruhepuls/HRV → öffnet App mit `?steps=&sleep=...` →
+  Query-Parser in der App speichert. Optional iOS-Automation für freihändig.
+- **F1 Daten→Insight-Loop:** Muster aus vorhandenen `db()`-Daten (z.B. Schlaf↔Energie).
+- **F2 Tages-Top-3 + Wenn-Dann-Pläne** (Implementation Intentions).
+- **F3 Deep-Work-Timer** (nutzt bestehende Rest-Timer-Logik, 90/20 ultradian).
+- **F4 Koffein-Cutoff-Wächter** (Uhrzeit zum Koffein-Log).
+
+### Optimierungs-Notizen (Hintergrund)
+
+- **Caching-Schmerz:** Ohne Service Worker cacht iOS das HTML stur (Pages
+  `max-age=600`). Updates testen via Safari + `?v=N` (Cache-Bust). Echte Lösung =
+  Service Worker (= neue Datei, gegen aktuelle Regel) → Phase-B-Kandidat.
+- **Datensicherheit:** `localStorage` einzige DB, iOS löscht bei ITP → regelmäßig
+  exportieren; mittelfristig IndexedDB.
+
+---
+
+## Was davor erledigt wurde (28. Mai 2026)
 
 ### Layout-Fixes (iOS Safari)
 
