@@ -2795,7 +2795,7 @@ function renderCIH(){
           ${e.schlafqAvg?`<div class="hkv"><span class="k">Ø Schlafq.</span><span class="v">${e.schlafqAvg}/10</span></div>`:''}
           ${e.energieAvg?`<div class="hkv"><span class="k">Ø Energie</span><span class="v">${e.energieAvg}/10</span></div>`:''}
         </div>
-        ${hp?`<img src="${ph[wk]}" style="width:100%;border-radius:var(--r);margin-top:8px">`:''}
+        ${_ps.front?`<img src="${_ps.front}" style="width:100%;border-radius:var(--r);margin-top:8px">`:''}
         <button class="del-btn" onclick="delCI(${e.id})">Löschen</button>
       </div>
     </div>`;
