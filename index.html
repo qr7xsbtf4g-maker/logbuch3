@@ -2821,8 +2821,8 @@ function importData(input){
       merged.sort((a,b)=>b.id-a.id);dbS(merged);
       if(d.checkin)dbCIS(d.checkin);if(d.photos)dbPHS(d.photos);if(d.hints)dbHIS(d.hints);
       toast('Import erfolgreich!');renderDH();renderTH();initWeekly();
-    }catch{toast('Import fehlgeschlagen')}
-  };r.readAsText(file);
+    }catch(err){console.error('Import-Fehler:',err);toast('Import fehlgeschlagen: '+((err&&err.message)||'ungültige Datei'));}
+  };r.onerror=()=>toast('Datei konnte nicht gelesen werden');r.readAsText(file);
 }
 
 /* ── PDF GENERATION ── */
