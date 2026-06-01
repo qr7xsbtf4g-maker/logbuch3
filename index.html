@@ -2814,15 +2814,27 @@ function exportData(){
 function importData(input){
   const file=input.files[0];if(!file)return;
   const r=new FileReader();
+  r.onerror=()=>toast('Datei nicht lesbar — evtl. nicht aus iCloud geladen');
   r.onload=e=>{
+    const txt=(e.target.result||'').trim();
+    if(!txt){toast('Datei ist leer — bitte erst aus iCloud herunterladen');return;}
+    let d;
+    try{d=JSON.parse(txt);}catch(err){console.error('JSON-Fehler:',err);toast('Keine gültige JSON: '+err.message);return;}
+    // Kern-Daten (Training/Daily/Check-in) — kritisch
     try{
-      const d=JSON.parse(e.target.result);
-      const merged=[...db(),...(d.daily||[]),...(d.training||[])].filter((v,i,a)=>a.findIndex(t=>t.id===v.id)===i);
+      const merged=[...db(),...(Array.isArray(d.daily)?d.daily:[]),...(Array.isArray(d.training)?d.training:[])]
+        .filter((v,i,a)=>a.findIndex(t=>t.id===v.id)===i);
       merged.sort((a,b)=>b.id-a.id);dbS(merged);
-      if(d.checkin)dbCIS(d.checkin);if(d.photos)dbPHS(d.photos);if(d.hints)dbHIS(d.hints);
-      toast('Import erfolgreich!');renderDH();renderTH();initWeekly();
-    }catch(err){console.error('Import-Fehler:',err);toast('Import fehlgeschlagen: '+((err&&err.message)||'ungültige Datei'));}
-  };r.onerror=()=>toast('Datei konnte nicht gelesen werden');r.readAsText(file);
+      if(Array.isArray(d.checkin))dbCIS(d.checkin);
+      if(d.hints)dbHIS(d.hints);
+    }catch(err){console.error('Import-Fehler:',err);toast('Import-Fehler: '+err.message);return;}
+    // Fotos separat — Speicherplatz darf den Rest nicht killen
+    let note='';
+    if(d.photos){try{dbPHS(d.photos);}catch(err){console.error('Foto-Import:',err);note=' (Fotos übersprungen)';}}
+    renderDH();renderTH();initWeekly();updateHeroNumbers();updateDayRing();
+    toast('Import erfolgreich!'+note);
+  };
+  r.readAsText(file);
 }
 
 /* ── PDF GENERATION ── */
