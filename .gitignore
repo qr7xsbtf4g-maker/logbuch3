@@ -7,3 +7,6 @@ preview-t0*.html
 
 # Lokale Tooling-Configs
 .claude/launch.json
+
+# Persönliche Notizen / Referenzmaterial (kein App-Code)
+input/
