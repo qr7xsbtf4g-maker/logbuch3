@@ -3,8 +3,8 @@
 ## Aktueller Stand
 
 **Datei:** `/Users/djoker/Claude/Claude/Projects/Projekt Dashboard CC/index.html`  
-**Zeilen:** ~3647  
-**Git:** Ja — remote auf GitHub, GitHub Pages aktiv  
+**Zeilen:** ~3856  
+**Git:** Ja — remote auf GitHub, GitHub Pages aktiv; aktuell lokale Änderungen in `index.html`, `AGENTS.md` untracked  
 **Branch:** `main`  
 **Syntaxcheck:** `node --check <(sed -n '/<script>/,/<\/script>/p' index.html | sed '1d;$d')`
 
@@ -21,6 +21,32 @@
 ---
 
 ## Was in der letzten Session erledigt wurde (2. Juni 2026)
+
+### Aktuelle Session — Produktiver Dashboard-Ausbau
+- **Daily Cockpit wieder entfernt:** Die Sektion **„Heute wichtig“** war für Dustin
+  nicht hilfreich und wurde vollständig entfernt: HTML-Block, CSS-Klassen
+  `.daily-cockpit`/`.cockpit-*`, JS-Funktionen `getDailyInsights`/`renderDailyCockpit`
+  und alle Update-Aufrufe. Syntaxcheck danach erfolgreich.
+- **Tagesimpulse besser markiert:** Der Tages-Impuls hat jetzt sichtbare Quellen-/Typ-Tags
+  (`Evidenz`, `Anekdotisch`, `Experiment`, `Warnung`) via `.source-chip`.
+  Anekdotische Inputs bleiben erlaubt, werden aber nicht als medizinische Fakten dargestellt.
+- **Daily-Takeaways erweitert:** Einige anekdotisch markierte Impulse aus Dustins
+  bevorzugten Richtungen ergänzt; medizinische/Supplement-Änderungen weiterhin nur
+  nach separatem Stack-Check.
+- **Export/Import robuster:** Export enthält Metadaten (`version`, `exportedAt`, Counts,
+  Hinweis); Import zeigt vor dem Einspielen eine Zusammenfassung und behandelt Fotos
+  separat, damit Speicherprobleme nicht den kompletten Import verhindern.
+- **Keine neuen Dateien, kein Framework, kein Build-System.** Alles bleibt in `index.html`.
+
+### Aktueller iOS/PWA-Stand
+- `apple-mobile-web-app-status-bar-style` steht aktuell auf **`default`**.
+- Grund: Das war auf dem iPhone die stabile Variante, bei der die untere Tab-Bar bündig
+  und ohne springenden Phantom-Abstand bleibt.
+- Wichtig: iOS liest diesen Meta-Wert nur beim Hinzufügen zur Home-App. Für den finalen
+  Test auf dem iPhone nach Push/Deploy ggf. Home-App entfernen und neu hinzufügen.
+  **Vorher immer Export machen**, weil dabei `localStorage` verloren gehen kann.
+- Keine `black-translucent`-/`screen.height`-/Fixed-Position-Hacks mehr einbauen, solange
+  nicht eine neue, sauber getestete Idee vorliegt.
 
 ### Kritischer Daten-Fix + Recovery
 - **Trainings-Entwurf (Crash-Schutz):** Eingaben mitten im Training (Sätze/Wdh/kg)
@@ -49,9 +75,10 @@
 2. **Phase B:** F0 Apple-Health-Sync, F1 Insight-Loop, F2 Top-3+Wenn-Dann, F3 Deep-Work-Timer,
    F4 Koffein-Cutoff (Details im Planfile).
 
-### Status-Bar-Stand (iOS-Grenze, akzeptiert)
-`black-translucent` = creme oben (Dark Mode). Untere ~62px creme Zone bleibt (iOS lässt
-creme-oben UND bündig-unten im Dark Mode nicht gleichzeitig zu). Nicht weiter iterieren.
+### Status-Bar-Stand
+Aktuell gilt die neuere Entscheidung aus dieser Session: **`default` behalten**, weil die
+untere Tab-Bar dadurch stabil und bündig bleibt. Ältere `black-translucent`-Notizen unten
+sind historische Tests, nicht der aktuelle Zielzustand.
 
 ---
 
@@ -66,16 +93,18 @@ creme-oben UND bündig-unten im Dark Mode nicht gleichzeitig zu). Nicht weiter i
 - `black-translucent` → einzige Option für creme Top (Inhalt scheint hinter der
   transparenten Leiste durch). Schrift bleibt weiß (iOS-fest, auf creme etwas blass).
 
-**Aktueller Stand:** `apple-mobile-web-app-status-bar-style: black-translucent`
-(+ `color-scheme:light`, theme-color creme für hell & dunkel). **Oben creme = erledigt.**
+**Historischer Zwischenstand, inzwischen überholt:** Damals war
+`apple-mobile-web-app-status-bar-style: black-translucent` aktiv
+(+ `color-scheme:light`, theme-color creme für hell & dunkel), um oben creme zu halten.
+Aktuell gilt aber wieder **`default`**, weil Dustin die untere stabile Tab-Bar priorisiert.
 
 **Ungelöst / iOS-Grenze:** black-translucent meldet `innerHeight`/`100dvh` = **812**,
 echter Screen = **874** (iPhone 16 Pro). Die 62px Differenz = creme Zone unten.
 - `fitApp()` (app-frame = screen.height) füllt sie, schneidet aber die Tab-Labels ab → **entfernt**.
 - Ohne fitApp: Tabs sichtbar, aber ~62px creme Zone unter der Bar (Home-Indikator-Bereich).
-- **Fazit: creme oben UND bündig unten gleichzeitig lässt iOS im Dark Mode NICHT zu.**
-  Dustin hat das akzeptiert / vorerst so gelassen. `border-top` der Tab-Bar entfernt
-  (nahtloser Übergang). KEINE weiteren fitApp-/black-translucent-Experimente ohne neue Idee.
+- **Fazit aus dieser Testreihe:** Creme oben UND bündig unten gleichzeitig war mit
+  `black-translucent` im Dark Mode nicht stabil erreichbar. Keine weiteren
+  fitApp-/black-translucent-Experimente ohne neue Idee.
 
 **WICHTIG:** `status-bar-style` wirkt nur nach **Entfernen + Neu-Hinzufügen** der Home-App.
 Dabei **löscht iOS den localStorage** → Daten gingen verloren (Streak war auf 1).

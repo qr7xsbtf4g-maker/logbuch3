@@ -481,6 +481,10 @@ body{background:#E8E3D8}
 .kpi-daily-val{font-family:'Geist Mono',monospace;font-size:26px;color:var(--tx);line-height:1;font-variant-numeric:tabular-nums}
 .kpi-daily-sub{font-size:11px;color:var(--txd);margin-top:3px}
 
+.source-chip{display:inline-flex;align-items:center;gap:4px;font-family:'Geist Mono',monospace;font-size:8px;letter-spacing:0.04em;color:var(--txm);border:1px solid var(--bd);border-radius:999px;padding:3px 7px;margin-bottom:7px;background:rgba(47,107,58,0.06)}
+.source-chip.anecdotal{background:rgba(200,100,60,0.07);border-color:rgba(200,100,60,0.18);color:var(--gold)}
+.source-chip.warning{background:rgba(154,51,32,0.07);border-color:rgba(154,51,32,0.18);color:var(--errl)}
+
 /* ── EDITORIAL BLOCK (Quote + Impuls) ── */
 .editorial-block{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:18px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .15s}
 .editorial-block:active{border-color:var(--goldd)}
@@ -671,19 +675,20 @@ body{background:#E8E3D8}
         <div class="kpi-daily-sub">Tage geloggt</div>
       </div>
     </div>
-  </div>
+	  </div>
 
-  <!-- Editorial: Zitat + Impuls -->
-  <div class="editorial-block" id="daily-quote-card" onclick="showAuthorInfo()">
-    <div class="editorial-quote" id="quote-text">—</div>
+	  <!-- Editorial: Zitat + Impuls -->
+	  <div class="editorial-block" id="daily-quote-card" onclick="showAuthorInfo()">
+	    <div class="editorial-quote" id="quote-text">—</div>
     <div class="editorial-author">
       <span id="quote-author"></span>
       <span class="editorial-author-hint">→ mehr</span>
-    </div>
-    <div class="editorial-divider"></div>
-    <div id="daily-takeaway-card" onclick="event.stopPropagation();showTakeawayInfo()" style="cursor:pointer;-webkit-tap-highlight-color:transparent">
-      <div class="editorial-impulse-label">Tages-Impuls</div>
-      <div class="editorial-impulse-text" id="takeaway-text">—</div>
+	    </div>
+	    <div class="editorial-divider"></div>
+	    <div id="daily-takeaway-card" onclick="event.stopPropagation();showTakeawayInfo()" style="cursor:pointer;-webkit-tap-highlight-color:transparent">
+	      <div class="source-chip" id="takeaway-source">Evidenz · Routine</div>
+	      <div class="editorial-impulse-label">Tages-Impuls</div>
+	      <div class="editorial-impulse-text" id="takeaway-text">—</div>
       <div class="editorial-impulse-hint">→ mehr</div>
     </div>
   </div>
@@ -913,6 +918,10 @@ body{background:#E8E3D8}
   <div id="wk-quick-score" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px"></div>
   <div class="sh">Wochenschnitt</div>
   <div class="stat-grid" id="ci-stats" style="grid-template-columns:1fr 1fr"></div>
+
+  <!-- ── MUSTER & ERKENNTNISSE (F1 Insight-Loop) ── -->
+  <div class="sh">Muster &amp; Erkenntnisse</div>
+  <div class="card" style="padding:13px 15px"><div id="ci-insights"></div></div>
 
   <!-- ── 1. KÖRPER ── -->
   <div class="sh">Körper</div>
@@ -1848,7 +1857,7 @@ const STOIC_QUOTES=[
   {t:"Was uns nicht umbringt, macht uns stärker.",a:"Friedrich Nietzsche"},
   {t:"Wer stark sein will, muss Unbequemlichkeit suchen.",a:"Epiktet"},
   {t:"Das Jetzt ist alles, was du hast. Nutze es.",a:"Marcus Aurelius"},
-  {t:"Schlaf wenig. Arbeite viel. Sei dankbar für beides.",a:"Epiktet"},
+  {t:"Schütze deine Energie. Disziplin beginnt damit, den Körper nicht zu verschwenden.",a:"Epiktet"},
 ];
 
 function getDailyQuote(){
@@ -1866,6 +1875,10 @@ function initDailyQuote(){
 }
 
 const DAILY_TAKEAWAYS=[
+  {type:"Anekdotisch",source:"Iron Mike",t:"Erst die Pflicht, dann Optimierung — Basics schlagen perfekte Hacks.",d:"Anekdotischer Praxis-Input aus der Coaching-/Bodybuilding-Welt: Die meisten Fortschritte kommen nicht durch das nächste Detail, sondern durch wiederholbare Standards. Heute zählt: Training sauber, Essen solide, Schlaf schützen. Erst wenn diese Basis steht, lohnt Feintuning."},
+  {type:"Anekdotisch",source:"Max Madsen",t:"Performance entsteht aus wiederholbaren Routinen, nicht aus Motivation.",d:"Anekdotischer Praxis-Input: Baue den Tag so, dass die richtige Handlung leicht wird. Tasche bereit, erste Mahlzeit geplant, Koffein bewusst, Training nicht verhandelbar oder bewusst gestrichen. Motivation ist Bonus — Struktur ist das Fundament."},
+  {type:"Anekdotisch",source:"Bodybuilding Bene",t:"Progression ist nur wertvoll, wenn Ausführung und Zielmuskel gleich bleiben.",d:"Anekdotischer Bodybuilding-Input: Mehr Gewicht ist kein Fortschritt, wenn Spannung, ROM oder Kontrolle schlechter werden. Für Hypertrophie zählt wiederholbare Qualität. Heute lieber einen sauberen Satz tracken als eine Zahl erzwingen."},
+  {type:"Anekdotisch",source:"Thomas Gajda",t:"Recovery ist kein Pausentag — Recovery ist aktives Management.",d:"Anekdotischer Coaching-Input: Schlaf, Stress, Verdauung, Schritte und Zone 2 bestimmen, ob Training adaptiert oder nur ermüdet. Heute: ein klares Recovery-Signal setzen, statt nur mehr Reiz zu suchen."},
   {t:"Ich bin diszipliniert genug für das, was ich mir vorgenommen habe.",d:"Disziplin ist keine Persönlichkeitseigenschaft, sondern eine trainierbare Fähigkeit. Studien zeigen: disziplinierte Menschen vermeiden Versuchungen aktiv durch Umgebungsgestaltung — nicht durch mehr Willenskraft. Du hast diese Fähigkeit bereits bewiesen, indem du ein System aufgebaut hast und es täglich nutzt."},
   {t:"Ich wachse jeden Tag — auch wenn es von außen nicht sichtbar ist.",d:"Wachstum ist biologisch kumulativ und oft unsichtbar. Muskeln wachsen im Schlaf, Fähigkeiten festigen sich im Unbewussten, Einstellungen ändern sich langsam. Der Compound-Effekt: 1% tägliche Verbesserung ergibt nach einem Jahr das 37-fache des Ausgangswerts. Was heute wie Stagnation aussieht, ist oft stille Adaptation."},
   {t:"Ich bin belastbar. Was mich beansprucht, macht mich stärker.",d:"Psychologische Resilienz ist neuroplastisch trainierbar. Jede Situation, in der du unter Druck funktionierst, stärkt präfrontale Kortex-Verbindungen, die für Stressregulation zuständig sind. Das Gehirn lernt buchstäblich: dieser Reiz ist überlebbar. Belastung ohne Erholung schadet — Belastung mit Erholung macht dich stärker."},
@@ -1986,7 +1999,33 @@ function getDailyTakeaway(){
 function initDailyTakeaway(){
   const ta=getDailyTakeaway();
   const el=document.getElementById('takeaway-text');
+  const src=document.getElementById('takeaway-source');
   if(el)el.textContent=ta.t;
+  if(src){
+    const type=ta.type||inferTakeawayType(ta);
+    const source=ta.source||inferTakeawaySource(ta);
+    src.textContent=type+' · '+source;
+    src.className='source-chip '+(type==='Anekdotisch'?'anecdotal':type==='Warnung'?'warning':'');
+  }
+}
+
+function inferTakeawayType(ta){
+  const txt=((ta.t||'')+' '+(ta.d||'')).toLowerCase();
+  if(/zink|hochdosiert|melatonin|5-htp|lithium|nac|supplement|akut/.test(txt))return'Warnung';
+  if(/iron mike|max madsen|bodybuilding|thomas gajda|jocko|arnold|coach/.test(txt))return'Anekdotisch';
+  if(/studien|studie|cortisol|testosteron|melatonin|halbwertszeit|ghrelin|leptin|evidenz|nrem|rem|atp/.test(txt))return'Evidenz';
+  if(/experiment|teste|probiere/.test(txt))return'Experiment';
+  return'Evidenz';
+}
+
+function inferTakeawaySource(ta){
+  const txt=((ta.t||'')+' '+(ta.d||'')).toLowerCase();
+  if(/seneca|epiktet|marcus|stoiker|negative visualisierung/.test(txt))return'Stoisch';
+  if(/koffein|adenosin|halbwertszeit/.test(txt))return'Koffein';
+  if(/schlaf|melatonin|rem|tiefschlaf|wachstumshormon/.test(txt))return'Schlaf';
+  if(/training|hypertrophie|satz|reps|muskel|protein|carbs/.test(txt))return'Training';
+  if(/fokus|deep work|schreibtisch|aufgaben|pareto|retrospektive/.test(txt))return'Fokus';
+  return'Routine';
 }
 
 const AUTHOR_INFO={
@@ -2017,6 +2056,13 @@ function closeAuthorInfo(){
 
 function showTakeawayInfo(){
   const ta=getDailyTakeaway();
+  const type=ta.type||inferTakeawayType(ta);
+  const source=ta.source||inferTakeawaySource(ta);
+  const src=document.getElementById('tamod-source');
+  if(src){
+    src.textContent=type+' · '+source;
+    src.className='source-chip '+(type==='Anekdotisch'?'anecdotal':type==='Warnung'?'warning':'');
+  }
   document.getElementById('tamod-title').textContent=ta.t;
   document.getElementById('tamod-body').textContent=ta.d||'';
   document.getElementById('ta-modal-bg').classList.add('open');
@@ -2543,7 +2589,7 @@ function loadTodayEntry(silent=false){
 /* ── WEEKLY ── */
 function initWeekly(){
   document.getElementById('ci-datum').value=today();
-  renderCIStats();renderWChart();renderWellbeingChart();renderPerfChart();renderZone2Chart();renderMuscleSetsChart();renderCIMuscleCheckin();renderCIH();loadPhotos();
+  renderCIStats();renderInsights();renderWChart();renderWellbeingChart();renderPerfChart();renderZone2Chart();renderMuscleSetsChart();renderCIMuscleCheckin();renderCIH();loadPhotos();
   checkBackupBanner();
 }
 function checkBackupBanner(){
@@ -2559,6 +2605,46 @@ function dismissBackupBanner(){
   localStorage.setItem('lbv4_backup_dismissed',today());
   const banner=document.getElementById('backup-banner');
   if(banner){banner.style.display='none';}
+}
+
+/* ── F1: INSIGHT-LOOP — rückblickende Muster aus echten Daten ── */
+function _insAvg(a){return a.length?a.reduce((x,y)=>x+y,0)/a.length:null;}
+function computeInsights(){
+  const daily=db().filter(e=>e.type==='daily');
+  const trainDates=new Set(db().filter(e=>e.type==='training'||e.type==='cardio').map(e=>e.datum));
+  const num=v=>{const n=parseFloat(v);return isNaN(n)?null:n;};
+  const found=[];
+  // Generischer Same-Day-Split: Metrik Y aufgeteilt nach Schwelle auf X
+  function split(xf,xthr,yf,minN,minDelta,mk){
+    const lo=[],hi=[];
+    daily.forEach(e=>{const x=num(e[xf]),y=num(e[yf]);if(x==null||y==null)return;(x<xthr?lo:hi).push(y);});
+    if(lo.length<minN||hi.length<minN)return;
+    const la=_insAvg(lo),ha=_insAvg(hi),d=ha-la;
+    if(Math.abs(d)<minDelta)return;
+    found.push({d:Math.abs(d),text:mk(la,ha,Math.abs(d))});
+  }
+  split('schlaf',7,'energie',3,0.8,(lo,hi,d)=>`Nach <b>&lt;7h Schlaf</b> war deine <b>Energie</b> ~<b>${d.toFixed(1)} Pkt. niedriger</b> (${lo.toFixed(1)} vs ${hi.toFixed(1)}/10).`);
+  split('schlaf',7,'stimmung',3,0.8,(lo,hi,d)=>`Nach <b>&lt;7h Schlaf</b> war deine <b>Stimmung</b> ~<b>${d.toFixed(1)} Pkt. niedriger</b> (${lo.toFixed(1)} vs ${hi.toFixed(1)}/10).`);
+  split('schlafq',6,'energie',3,0.8,(lo,hi,d)=>`Bei <b>Schlafqualität &lt;6</b> war deine Energie ~<b>${d.toFixed(1)} Pkt. niedriger</b> (${lo.toFixed(1)} vs ${hi.toFixed(1)}/10).`);
+  // Trainingstage → Stimmung
+  (function(){const w=[],wo=[];daily.forEach(e=>{const y=num(e.stimmung);if(y==null)return;(trainDates.has(e.datum)?w:wo).push(y);});
+    if(w.length>=3&&wo.length>=3){const wa=_insAvg(w),woa=_insAvg(wo),d=wa-woa;if(d>=0.8)found.push({d,text:`An <b>Trainingstagen</b> war deine Stimmung ~<b>${d.toFixed(1)} Pkt. höher</b> (${wa.toFixed(1)} vs ${woa.toFixed(1)}/10).`});}})();
+  // Koffein heute → Schlafqualität der nächsten Nacht
+  (function(){const byDate={};daily.forEach(e=>byDate[e.datum]=e);const lo=[],hi=[];
+    daily.forEach(e=>{const k=num(e.koffein);if(k==null)return;const d=new Date(e.datum);d.setDate(d.getDate()+1);const nk=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;const nx=byDate[nk];if(!nx)return;const sq=num(nx.schlafq);if(sq==null)return;(k>200?hi:lo).push(sq);});
+    if(lo.length>=3&&hi.length>=3){const la=_insAvg(lo),ha=_insAvg(hi),d=la-ha;if(d>=0.6)found.push({d,text:`Nach <b>&gt;200mg Koffein</b> war deine <b>Schlafqualität</b> ~<b>${d.toFixed(1)} Pkt. schlechter</b> (${ha.toFixed(1)} vs ${la.toFixed(1)}/10).`});}})();
+  found.sort((a,b)=>b.d-a.d);
+  return found.slice(0,3).map(f=>f.text);
+}
+function renderInsights(){
+  const el=document.getElementById('ci-insights');if(!el)return;
+  const ins=computeInsights();
+  const n=db().filter(e=>e.type==='daily').length;
+  if(!ins.length){
+    el.innerHTML=`<div style="font-family:'Geist',sans-serif;font-size:12px;color:var(--txd);line-height:1.5">${n<10?'Noch zu wenig Daten für klare Muster — ab ~10 geloggten Tagen erkenne ich Zusammenhänge.':'Aktuell keine auffälligen Muster. Logge weiter — Muster brauchen Streuung in den Daten.'}</div>`;return;
+  }
+  el.innerHTML=ins.map((t,i)=>`<div style="display:flex;gap:8px;align-items:flex-start;font-family:'Geist',sans-serif;font-size:12.5px;line-height:1.45;color:var(--tx);padding:7px 0;${i<ins.length-1?'border-bottom:1px solid rgba(15,15,14,0.06)':''}"><span style="color:var(--gold);flex-shrink:0">▸</span><span>${t}</span></div>`).join('')
+    +`<div style="font-family:'Geist',sans-serif;font-size:9px;color:var(--txd);margin-top:8px;letter-spacing:0.03em">Aus deinen geloggten Daten · keine medizinische Beratung</div>`;
 }
 
 function renderCIStats(){
@@ -2846,7 +2932,20 @@ function renderCIH(){
 function delCI(id){if(!confirm('Löschen?'))return;dbCIS(dbCI().filter(e=>e.id!==id));initWeekly();toast('Gelöscht')}
 
 function exportData(){
-  const data={daily:db().filter(e=>e.type==='daily'),training:db().filter(e=>e.type==='training'),checkin:dbCI(),photos:dbPH(),hints:dbHI()};
+  const daily=db().filter(e=>e.type==='daily');
+  const training=db().filter(e=>e.type==='training');
+  const cardio=db().filter(e=>e.type==='cardio');
+  const photos=dbPH();
+  const data={
+    meta:{
+      app:'DASHBOARD · DJI',
+      version:'lbv4.1',
+      exportedAt:new Date().toISOString(),
+      counts:{daily:daily.length,training:training.length,cardio:cardio.length,checkin:dbCI().length,photos:Object.keys(photos).length,hints:Object.keys(dbHI()).length},
+      note:'Single-File localStorage Export. Vor Home-App-Reinstall immer sichern.'
+    },
+    daily,training,cardio,checkin:dbCI(),photos,hints:dbHI()
+  };
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');
   a.href=url;a.download=`dashboard_${today()}.json`;a.click();URL.revokeObjectURL(url);localStorage.setItem('lb_backup_ts',Date.now());toast('Export erstellt');
@@ -2861,17 +2960,25 @@ function importData(input){
     if(!txt){toast('Datei ist leer — bitte erst aus iCloud herunterladen');return;}
     let d;
     try{d=JSON.parse(txt);}catch(err){console.error('JSON-Fehler:',err);toast('Keine gültige JSON: '+err.message);return;}
-    // Kern-Daten (Training/Daily/Check-in) — kritisch
+    const daily=Array.isArray(d.daily)?d.daily:[];
+    const training=Array.isArray(d.training)?d.training:[];
+    const cardio=Array.isArray(d.cardio)?d.cardio:[];
+    const checkin=Array.isArray(d.checkin)?d.checkin:[];
+    const photos=d.photos||{};
+    const hints=d.hints||{};
+    const summary=`Import prüfen:\nDaily: ${daily.length}\nTraining: ${training.length}\nCardio: ${cardio.length}\nCheck-ins: ${checkin.length}\nFotos: ${Object.keys(photos).length}\n\nImport fortsetzen?`;
+    if(!confirm(summary)){input.value='';return;}
+    // Kern-Daten (Training/Daily/Cardio/Check-in) — kritisch
     try{
-      const merged=[...db(),...(Array.isArray(d.daily)?d.daily:[]),...(Array.isArray(d.training)?d.training:[])]
+      const merged=[...db(),...daily,...training,...cardio]
         .filter((v,i,a)=>a.findIndex(t=>t.id===v.id)===i);
       merged.sort((a,b)=>b.id-a.id);dbS(merged);
-      if(Array.isArray(d.checkin))dbCIS(d.checkin);
-      if(d.hints)dbHIS(d.hints);
+      if(checkin.length)dbCIS(checkin);
+      if(Object.keys(hints).length)dbHIS(hints);
     }catch(err){console.error('Import-Fehler:',err);toast('Import-Fehler: '+err.message);return;}
     // Fotos separat — Speicherplatz darf den Rest nicht killen
     let note='';
-    if(d.photos){try{dbPHS(d.photos);}catch(err){console.error('Foto-Import:',err);note=' (Fotos übersprungen)';}}
+    if(Object.keys(photos).length){try{dbPHS(photos);}catch(err){console.error('Foto-Import:',err);note=' (Fotos übersprungen)';}}
     renderDH();renderTH();initWeekly();updateHeroNumbers();updateDayRing();
     toast('Import erfolgreich!'+note);
   };
@@ -3742,6 +3849,7 @@ function initHealth(){
 <div class="ta-modal-bg" id="ta-modal-bg" onclick="closeTakeawayInfo()">
   <div class="ta-modal" onclick="event.stopPropagation()">
     <div class="ta-modal-label">Tages-Impuls</div>
+    <div class="source-chip" id="tamod-source">Evidenz · Routine</div>
     <div class="ta-modal-title" id="tamod-title"></div>
     <div class="ta-modal-body" id="tamod-body"></div>
     <div class="ta-modal-close">— antippen zum Schließen —</div>
