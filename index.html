@@ -799,6 +799,7 @@ body{background:#E8E3D8}
       <button class="split-btn" onclick="selSplit('GK2',this)">Ganzkörper 2<span>Samstag</span></button>
     </div>
     <div class="sh">Übungen <span id="vol-total"></span></div>
+    <div id="session-timer" style="display:none;align-items:center;gap:6px;font-family:'Geist Mono',monospace;font-size:14px;font-weight:500;color:var(--gold);margin:0 0 8px"><span style="font-size:13px">⏱</span><span id="sess-dur">0:00</span><span style="font-size:9px;color:var(--txm);letter-spacing:1.5px">DAUER · LÄUFT</span></div>
     <div id="session-muscle-sum" style="display:none;margin-bottom:10px"></div>
     <div id="timer-banner" class="timer-banner"></div>
     <div id="exercises-container"></div>
@@ -1142,7 +1143,7 @@ const PLAN={
   ]}
 };
 
-let ST={gym:parseInt(localStorage.getItem('lb_gym')||'0'),split:null,toggles:{},exSets:{},currentPhotos:{front:null,side:null,back:null},currentTab:0,sessionOrder:null,_todaySplit:null,swapOverrides:{}};
+let ST={gym:parseInt(localStorage.getItem('lb_gym')||'0'),split:null,toggles:{},exSets:{},currentPhotos:{front:null,side:null,back:null},currentTab:0,sessionOrder:null,_todaySplit:null,swapOverrides:{},sessionStart:null};
 let suppData={datum:'',daily:[],sleep:[],illnessMode:false,illness:[]};
 const DAILY_SUPPS=[
   {name:'Rhodiola Rosea',dose:'500mg · Mahlzeit: nüchtern besser',timing:'morgens'},
@@ -1398,6 +1399,7 @@ function updateExDone(ei){
   const items=[...wrap.querySelectorAll('.set-item')];
   const total=items.length;
   const done=items.filter(item=>item.querySelector('[id^="rp-"]')?.value?.trim()).length;
+  if(total>0&&done===total&&ST.split&&!ST.sessionStart)startSessionTimer();
   const badge=document.getElementById('ex-done-'+ei);if(!badge)return;
   if(done===0){badge.style.display='none';return;}
   badge.style.display='';
@@ -1759,6 +1761,7 @@ function saveTrainDraft(){
     ex[i]={sets,arm:ST.exSets[i]?.arm||'links'};
   });
   const draft={datum:today(),gym:ST.gym,split:ST.split,swapOverrides:ST.swapOverrides||{},
+    sessionStart:ST.sessionStart||null,
     perf:document.getElementById('sl-perf')?.value,
     notizen:document.getElementById('t-notizen')?.value||'',ex};
   try{localStorage.setItem('lb_train_draft',JSON.stringify(draft));}catch(e){}
@@ -1797,11 +1800,30 @@ function restoreTrainDraft(){
     });
     if(draft.perf){const p=document.getElementById('sl-perf');if(p){p.value=draft.perf;updSl('perf');}}
     if(draft.notizen){const n=document.getElementById('t-notizen');if(n)n.value=draft.notizen;}
+    ST.sessionStart=draft.sessionStart||null;
+    if(ST.sessionStart)resumeSessionTimer();
     if(typeof updTV==='function')updTV();
     if(typeof initExerciseDots==='function')initExerciseDots();
     toast('Trainings-Entwurf von heute wiederhergestellt');
   },80);
 }
+
+/* ── SESSION-TIMER (Trainingsdauer) ── */
+let _sessTimer=null;
+function _fmtDur(sec){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;return h>0?`${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`:`${m}:${String(s).padStart(2,'0')}`;}
+function tickSession(){if(!ST.sessionStart)return;const el=document.getElementById('sess-dur');if(el)el.textContent=_fmtDur(Math.floor((Date.now()-ST.sessionStart)/1000));}
+function startSessionTimer(){
+  if(!ST.sessionStart)ST.sessionStart=Date.now();
+  const box=document.getElementById('session-timer');if(box)box.style.display='flex';
+  tickSession();clearInterval(_sessTimer);_sessTimer=setInterval(tickSession,1000);
+  saveTrainDraft();
+}
+function resumeSessionTimer(){
+  if(!ST.sessionStart)return;
+  const box=document.getElementById('session-timer');if(box)box.style.display='flex';
+  tickSession();clearInterval(_sessTimer);_sessTimer=setInterval(tickSession,1000);
+}
+function stopSessionTimer(){clearInterval(_sessTimer);_sessTimer=null;}
 
 /* ── SAVE ── */
 /* ── AUTO-SAVE DAILY ── */
@@ -2103,12 +2125,14 @@ function saveTraining(btn=null){
   const exercises=getExData();
   const _now=new Date();
   const endTime=`${String(_now.getHours()).padStart(2,'0')}:${String(_now.getMinutes()).padStart(2,'0')}`;
+  let startTime,dauer;
+  if(ST.sessionStart){const _st=new Date(ST.sessionStart);startTime=`${String(_st.getHours()).padStart(2,'0')}:${String(_st.getMinutes()).padStart(2,'0')}`;dauer=Math.max(1,Math.round((Date.now()-ST.sessionStart)/60000));}
   const e={id:Date.now(),type:'training',datum:today(),gym:GYMS[ST.gym],split:ST.split,splitLabel:PLAN[ST.split]?.label,
-    endTime,
+    startTime,endTime,dauer,
     performance:document.getElementById('sl-perf').value,
     notizen:document.getElementById('t-notizen').value,
     exercises,totalVol:exercises.reduce((a,e)=>a+e.vol,0)};
-  const d=db();d.unshift(e);dbS(d);clearTrainDraft();btnOk(btn);renderTH();updateDayRing();markTodayTrainingDone();
+  const d=db();d.unshift(e);dbS(d);stopSessionTimer();ST.sessionStart=null;clearTrainDraft();btnOk(btn);renderTH();updateDayRing();markTodayTrainingDone();
   const swapKeys=Object.keys(ST.swapOverrides||{});
   if(swapKeys.length>0){openPlanConfirmModal();}
   else{toast('Krafttraining gespeichert!');resetTraining();}
@@ -2259,6 +2283,8 @@ function resetTraining(){
   document.getElementById('sl-perf').value=1;updSl('perf');
   document.getElementById('kraft-section').style.display='none';
   ST.split=null;ST.exSets={};rests={};ST.sessionOrder=null;ST.swapOverrides={};
+  stopSessionTimer();ST.sessionStart=null;
+  const _stb=document.getElementById('session-timer');if(_stb)_stb.style.display='none';
   clearTrainDraft();
   // Cardio-Bereich NICHT zurücksetzen — bleibt für eigenständige Cardio-Erfassung
 }
