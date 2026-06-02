@@ -20,7 +20,42 @@
 
 ---
 
-## Was in der letzten Session erledigt wurde (1. Juni 2026)
+## Was in der letzten Session erledigt wurde (2. Juni 2026)
+
+### Kritischer Daten-Fix + Recovery
+- **Trainings-Entwurf (Crash-Schutz):** Eingaben mitten im Training (Sätze/Wdh/kg)
+  überleben jetzt App-Schließen — Live-Draft in `localStorage['lb_train_draft']`
+  (`saveTrainDraft`/`restoreTrainDraft`, Hooks in onSetInput/addSet/selArm/visibilitychange).
+  Speichern-Button bleibt der finale Save; Draft nur Absturzschutz.
+- **Import repariert:** robuster (leere Datei/iCloud-Platzhalter abfangen, Fotos
+  isoliert, echte Fehlermeldung) + **`hp`-Crash in `renderCIH` behoben** (undefinierte
+  Variable brach Import+Check-in-Verlauf ab) → `_ps.front`.
+- **Recovery:** Dustins iCloud-Backup `dashboard_2026-05-31.json` war valide; nach
+  iCloud-Download + Import alle Daten zurück. (Re-Add für Statusleiste hatte localStorage
+  geleert — Lehre: vor Re-Add IMMER exportieren.)
+
+### Diese Runde (T1–T3)
+- **T1 — JoyFit-Nachtrag:** OK-Einheit vom **01.06.** (JoyFitness Lübeck, 7 Übungen,
+  Vol 3194) als **additive** Import-Datei `joyfit_2026-06-01.json` in Dustins
+  iCloud-Ordner (`…/BPOL/Aufstieg/HS III/`) erstellt. Merge-getestet: überschreibt nichts.
+- **T2 — Zone-2-Chart** im Check-In von Abschnitt *Wohlbefinden* → *Training* verschoben.
+- **T3 — Session-Timer:** Auto-Start bei erster komplett eingetragener Übung, sichtbar
+  im Training-Tab, Stop beim Speichern → `startTime`/`endTime`/`dauer`(min) im Eintrag
+  (renderTH zeigt es). Übersteht App-Schließen (sessionStart im Draft).
+
+### OFFEN (Reihenfolge)
+1. **R3 Slides → App** (Dustin liefert Trainings-/Schlaf-PNGs): Tages-Impuls/Wissens-Tipps
+   + Training-Logik + Schlaf-Empfehlungen. (Supplement-Bezug → erst `/supplement-stack-check`.)
+2. **Phase B:** F0 Apple-Health-Sync, F1 Insight-Loop, F2 Top-3+Wenn-Dann, F3 Deep-Work-Timer,
+   F4 Koffein-Cutoff (Details im Planfile).
+
+### Status-Bar-Stand (iOS-Grenze, akzeptiert)
+`black-translucent` = creme oben (Dark Mode). Untere ~62px creme Zone bleibt (iOS lässt
+creme-oben UND bündig-unten im Dark Mode nicht gleichzeitig zu). Nicht weiter iterieren.
+
+---
+
+## Was davor erledigt wurde (1. Juni 2026)
 
 ### Status-Bar-Saga (oben creme) — iOS-Grenze erreicht
 
