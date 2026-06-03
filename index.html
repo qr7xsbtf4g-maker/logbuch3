@@ -2081,8 +2081,6 @@ function autoSaveDaily(){
   const data={
     type:'daily',datum,
     gewicht:document.getElementById('d-gewicht').value||undefined,
-    schlaf:document.getElementById('d-schlaf').value||undefined,
-    schlafq:document.getElementById('sl-schlafq').value,
     stimmung:document.getElementById('sl-stimmung').value,
     energie:document.getElementById('sl-energie').value,
     verdauung:document.getElementById('sl-verdauung').value,
@@ -2103,8 +2101,6 @@ function saveMorning(btn=null){
   const fields={
     type:'daily',datum,
     gewicht:document.getElementById('d-gewicht').value||undefined,
-    schlaf:document.getElementById('d-schlaf').value||undefined,
-    schlafq:document.getElementById('sl-schlafq').value,
   };
   if(existing){Object.assign(existing,fields);dbS(d);}
   else{d.unshift({id:Date.now(),...fields});dbS(d);}
@@ -2323,7 +2319,7 @@ function resetDailyAbend(){
   ST.toggles={};
 }
 function resetDaily(){
-  ['d-gewicht','d-schlaf'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['d-gewicht'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
   ['schlafq','stimmung','energie','verdauung'].forEach(id=>{const el=document.getElementById('sl-'+id);if(el){el.value=1;updSl(id)}});
   document.querySelectorAll('#ow-ja-btn,#ow-nein-btn').forEach(b=>b.classList.remove('sel'));
   const _j2=document.getElementById('t-journal');if(_j2)_j2.value='';
@@ -2354,10 +2350,9 @@ function resetCardio(){
 /* ── RENDER HISTORIES ── */
 function loadDailyEdit(id){
   const e=db().find(x=>x.id===id);if(!e)return;
-  if(e.gewicht){document.getElementById('d-datum').value=e.datum;document.getElementById('d-gewicht').value=e.gewicht||'';document.getElementById('d-schlaf').value=e.schlaf||'';}
+  if(e.gewicht){document.getElementById('d-gewicht').value=e.gewicht||'';}
   document.getElementById('d-datum').value=e.datum;
   if(e.koffeinLog){koffeinLog=e.koffeinLog;}else if(e.koffein){koffeinLog=[{name:'Geladen',mg:parseFloat(e.koffein)||0,time:Date.now()}];}else{koffeinLog=[];}updateKoffeinUI();
-  if(e.schlafq){document.getElementById('sl-schlafq').value=e.schlafq;updSl('schlafq')}
   if(e.stimmung){document.getElementById('sl-stimmung').value=e.stimmung;updSl('stimmung')}
   if(e.energie){document.getElementById('sl-energie').value=e.energie;updSl('energie')}
   if(e.verdauung){document.getElementById('sl-verdauung').value=e.verdauung;updSl('verdauung')}
@@ -2563,8 +2558,6 @@ function loadTodayEntry(silent=false){
   document.getElementById('d-datum').value=todayStr;
   if(!e){resetDaily();document.getElementById('d-datum').value=todayStr;if(!silent)goTab(0);return;}
   document.getElementById('d-gewicht').value=e.gewicht||'';
-  document.getElementById('d-schlaf').value=e.schlaf||'';
-  if(e.schlafq){document.getElementById('sl-schlafq').value=e.schlafq;updSl('schlafq');}
   if(e.stimmung){document.getElementById('sl-stimmung').value=e.stimmung;updSl('stimmung');}
   if(e.energie){document.getElementById('sl-energie').value=e.energie;updSl('energie');}
   if(e.verdauung){document.getElementById('sl-verdauung').value=e.verdauung;updSl('verdauung');}
@@ -3292,14 +3285,6 @@ function updateHeroNumbers(){
       else gSub.textContent='';
     }else if(gSub)gSub.textContent='';
   }
-  const sEl=document.getElementById('hero-schlaf');
-  const sSub=document.getElementById('hero-schlaf-sub');
-  if(sEl){
-    sEl.textContent=latest?.schlaf||'—';
-    sEl.style.color=latest?.schlaf?'var(--tx)':'var(--txd)';
-    if(latest?.schlafq&&sSub)sSub.textContent='Qualität: '+latest.schlafq+'/10';
-    else if(sSub)sSub.textContent='';
-  }
   const stEl=document.getElementById('hero-streak');
   if(stEl){const _streak=calcStreak();stEl.textContent=_streak;stEl.style.color=_streak>0?'var(--gold)':'var(--txd)';}
 }
@@ -3681,9 +3666,8 @@ function importHealthParams(){
   if(!(w||sl||steps||rhr||hrv))return;
   const datum=today();
   const gEl=document.getElementById('d-gewicht');if(w&&gEl)gEl.value=w;
-  const sEl=document.getElementById('d-schlaf');if(sl&&sEl)sEl.value=sl;
   const dd=db();let e=dd.find(x=>x.type==='daily'&&x.datum===datum);if(!e){e={id:Date.now(),type:'daily',datum};dd.unshift(e);}
-  if(w)e.gewicht=w;if(sl)e.schlaf=sl;
+  if(w)e.gewicht=w;
   if(steps)e.schritte=parseInt(steps)||undefined;
   if(rhr)e.ruhepuls=parseInt(rhr)||undefined;
   if(hrv)e.hrv=parseInt(hrv)||undefined;
