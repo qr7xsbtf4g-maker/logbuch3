@@ -693,25 +693,6 @@ body{background:#E8E3D8}
     </div>
   </div>
 
-  <!-- ── F2: FOKUS (Top-3 + Wenn-Dann) ── -->
-  <div class="sh">Fokus</div>
-  <div class="card">
-    <div style="font-family:'Geist',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:var(--gold);margin-bottom:8px">Top 3 heute</div>
-    <div id="top3-list"></div>
-    <div style="font-family:'Geist',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:var(--gold);margin:16px 0 3px">Wenn → Dann <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--txd);font-size:9px">· diese Woche</span></div>
-    <div style="font-family:'Geist',sans-serif;font-size:10px;color:var(--txd);margin-bottom:9px;line-height:1.4">Vorsätze als „Wenn [Situation], dann [Handlung]" — erhöht die Umsetzung deutlich.</div>
-    <div id="ifthen-list"></div>
-  </div>
-
-  <!-- ── F3: DEEP-WORK-TIMER ── -->
-  <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px">
-    <div>
-      <div style="font-family:'Geist',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:var(--gold);margin-bottom:3px">Deep Work</div>
-      <div id="dw-total" style="font-family:'Geist Mono',monospace;font-size:12px;color:var(--txm)">0 Min heute</div>
-    </div>
-    <button id="dw-btn" onclick="toggleDeepWork()" style="flex-shrink:0;min-width:124px;padding:11px 16px;border:none;border-radius:10px;background:var(--gold);color:#fff;font-family:'Geist',sans-serif;font-weight:600;font-size:14px;cursor:pointer;-webkit-tap-highlight-color:transparent">▶ Start</button>
-  </div>
-
   <div class="sh">Heute</div>
   <div id="autosave-status" class="autosave-ind hidden"></div>
 
@@ -3697,37 +3678,6 @@ function confirmSwap(ei,name,muscle){
   toast('→ '+name);
 }
 
-/* ── F2: TOP-3 + WENN-DANN ── */
-function _escAttr(s){return (s||'').replace(/"/g,'&quot;');}
-function _focusRow(kind,i,it,ph,fs){return `<div style="display:flex;align-items:center;gap:9px;padding:4px 0"><button onclick="toggle${kind}(${i})" style="flex-shrink:0;width:22px;height:22px;border-radius:6px;border:1.5px solid ${it.done?'var(--ok)':'var(--bd2)'};background:${it.done?'var(--ok)':'transparent'};color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent">${it.done?'✓':''}</button><input value="${_escAttr(it.t)}" oninput="input${kind}(${i},this.value)" placeholder="${ph}" style="flex:1;background:transparent;border:none;border-bottom:1px solid var(--bd);color:var(--tx);font-family:'Geist',sans-serif;font-size:${fs}px;padding:5px 0;outline:none;${it.done?'text-decoration:line-through;color:var(--txd)':''}"></div>`;}
-function loadTop3(){let d;try{d=JSON.parse(localStorage.getItem('lb_top3')||'null');}catch(e){d=null;}if(!d||d.date!==today())d={date:today(),items:[{t:'',done:false},{t:'',done:false},{t:'',done:false}]};return d;}
-function renderTop3(){const w=document.getElementById('top3-list');if(!w)return;const d=loadTop3();w.innerHTML=d.items.map((it,i)=>_focusRow('Top3',i,it,'Priorität '+(i+1),14)).join('');}
-function inputTop3(i,v){const d=loadTop3();d.items[i].t=v;localStorage.setItem('lb_top3',JSON.stringify(d));}
-function toggleTop3(i){const d=loadTop3();d.items[i].done=!d.items[i].done;localStorage.setItem('lb_top3',JSON.stringify(d));renderTop3();}
-function loadIfThen(){let d;try{d=JSON.parse(localStorage.getItem('lb_ifthen')||'null');}catch(e){d=null;}const wk=getWK(today());if(!d||d.week!==wk)d={week:wk,items:[{t:'',done:false},{t:'',done:false},{t:'',done:false}]};return d;}
-function renderIfThen(){const w=document.getElementById('ifthen-list');if(!w)return;const d=loadIfThen();w.innerHTML=d.items.map((it,i)=>_focusRow('IfThen',i,it,'Wenn …, dann …',13)).join('');}
-function inputIfThen(i,v){const d=loadIfThen();d.items[i].t=v;localStorage.setItem('lb_ifthen',JSON.stringify(d));}
-function toggleIfThen(i){const d=loadIfThen();d.items[i].done=!d.items[i].done;localStorage.setItem('lb_ifthen',JSON.stringify(d));renderIfThen();}
-
-/* ── F3: DEEP-WORK-TIMER (90/20 ultradian, übersteht App-Schließen) ── */
-let _dwInterval=null;
-function loadDW(){let d;try{d=JSON.parse(localStorage.getItem('lb_deepwork')||'null');}catch(e){d=null;}if(!d||d.date!==today())d={date:today(),totalMin:0,startTs:null,notified90:false};return d;}
-function saveDW(d){localStorage.setItem('lb_deepwork',JSON.stringify(d));}
-function _fmtMS(sec){return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;}
-function renderDW(){const d=loadDW();const tot=document.getElementById('dw-total');const btn=document.getElementById('dw-btn');if(!tot||!btn)return;
-  if(d.startTs){const el=Math.floor((Date.now()-d.startTs)/1000);btn.textContent='■ Stop  '+_fmtMS(el);btn.style.background='var(--err)';tot.textContent=`${d.totalMin} Min heute · läuft`;}
-  else{btn.textContent='▶ Start';btn.style.background='var(--gold)';tot.textContent=`${d.totalMin} Min heute`;}}
-function _dwTick(){const d=loadDW();if(!d.startTs){if(_dwInterval){clearInterval(_dwInterval);_dwInterval=null;}return;}
-  const elMin=(Date.now()-d.startTs)/60000;
-  if(elMin>=90&&!d.notified90){d.notified90=true;saveDW(d);try{beep();}catch(e){}navigator.vibrate&&navigator.vibrate([150,80,150]);const b=document.getElementById('timer-banner');if(b){b.textContent='90 Min Deep Work — Pause machen';b.classList.add('visible');setTimeout(()=>b.classList.remove('visible'),3500);}}
-  renderDW();}
-function toggleDeepWork(){const d=loadDW();
-  if(d.startTs){const mins=Math.round((Date.now()-d.startTs)/60000);d.totalMin+=mins;d.startTs=null;d.notified90=false;saveDW(d);if(_dwInterval){clearInterval(_dwInterval);_dwInterval=null;}try{beep();}catch(e){}
-    const dd=db();const ex=dd.find(e=>e.type==='daily'&&e.datum===today());if(ex){ex.deepWork=d.totalMin;dbS(dd);}else{dd.unshift({id:Date.now(),type:'daily',datum:today(),deepWork:d.totalMin});dbS(dd);}
-    toast(`Deep Work: +${mins} Min (heute ${d.totalMin})`);}
-  else{d.startTs=Date.now();d.notified90=false;saveDW(d);if(!_dwInterval)_dwInterval=setInterval(_dwTick,1000);}
-  renderDW();}
-function initDeepWork(){renderDW();const d=loadDW();if(d.startTs&&!_dwInterval)_dwInterval=setInterval(_dwTick,1000);}
 
 /* ── F0: APPLE-HEALTH-IMPORT via URL-Parameter (Kurzbefehl-Brücke) ──
    Kurzbefehl öffnet App mit ?weight=&sleep=&steps=&rhr=&hrv= → wird in den
@@ -3764,7 +3714,7 @@ function init(){
   renderDH();renderTH();
   loadTodayEntry(true);
   loadKoffeinLog();
-  renderTop3();renderIfThen();initDeepWork();importHealthParams();
+  importHealthParams();
   initDailyQuote();
   initDailyTakeaway();
   initJournalQuestion();
