@@ -943,19 +943,6 @@ body{background:#E8E3D8}
   <!-- ── 2. WOHLBEFINDEN ── -->
   <div class="sh">Wohlbefinden</div>
 
-  <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
-    <div class="ex-section-head" onclick="toggleSec('wbs-wellbeing','wbsc-wellbeing')" style="padding:12px 14px;border-top:none">
-      <span class="ex-section-label" style="font-size:11px;color:var(--gold)">Schlaf &amp; Energie</span>
-      <span class="chev" id="wbsc-wellbeing">▾</span>
-    </div>
-    <div class="ex-section-body" id="wbs-wellbeing" style="padding:0 12px 12px">
-      <div style="display:flex;gap:14px;justify-content:flex-end;margin-bottom:4px">
-        <span style="font-family:'Geist',sans-serif;font-size:9px;color:#8B5CF6;display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#8B5CF6;border-radius:2px"></span>Schlafq.</span>
-        <span style="font-family:'Geist',sans-serif;font-size:9px;color:var(--gold);display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:var(--gold);border-radius:2px"></span>Energie</span>
-      </div>
-      <div class="chart-wrap" style="height:150px"><canvas id="wellbeing-chart"></canvas></div>
-    </div>
-  </div>
 
   <div class="card" style="padding:0;margin-bottom:10px;overflow:hidden">
     <div class="ex-section-head" onclick="toggleSec('wbs-daily','wbsc-daily')" style="padding:12px 14px;border-top:none">
@@ -1182,18 +1169,19 @@ let _weightSpark=null;
 let undoSet=null;
 
 let _dbCache=null;
-const db=()=>{if(!_dbCache)_dbCache=JSON.parse(localStorage.getItem(SK)||'[]');return _dbCache;};
+function _safeRead(key,def){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(def));}catch(e){return def;}}
+const db=()=>{if(!_dbCache)_dbCache=_safeRead(SK,[]);return _dbCache;};
 function _safeSave(key,data,errMsg){try{localStorage.setItem(key,JSON.stringify(data));}catch(e){if(e.name==='QuotaExceededError'||e.code===22){toast(errMsg||'Speicher voll — Daten exportieren!');}}}
 const dbS=d=>{_dbCache=d;_safeSave(SK,d,'Speicher voll — Daten exportieren!');};
-const dbCI=()=>JSON.parse(localStorage.getItem(SK_CI)||'[]');
+const dbCI=()=>_safeRead(SK_CI,[]);
 const dbCIS=d=>_safeSave(SK_CI,d,'Speicher voll — Daten exportieren!');
-const dbPH=()=>JSON.parse(localStorage.getItem(SK_PH)||'{}');
+const dbPH=()=>_safeRead(SK_PH,{});
 const dbPHS=d=>_safeSave(SK_PH,d,'Speicher voll — Foto konnte nicht gespeichert werden!');
-const dbHI=()=>JSON.parse(localStorage.getItem(SK_HI)||'{}');
+const dbHI=()=>_safeRead(SK_HI,{});
 const dbHIS=d=>_safeSave(SK_HI,d);
-const dbEX=()=>JSON.parse(localStorage.getItem(SK_EXDB)||'{}');
+const dbEX=()=>_safeRead(SK_EXDB,{});
 const dbEXS=d=>_safeSave(SK_EXDB,d,'Übungsdatenbank: Speicher voll');
-const dbPO=()=>JSON.parse(localStorage.getItem(SK_PLAN_OV)||'{}');
+const dbPO=()=>_safeRead(SK_PLAN_OV,{});
 const dbPOS=d=>_safeSave(SK_PLAN_OV,d);
 
 function initExDB(){
@@ -2576,7 +2564,7 @@ function loadTodayEntry(silent=false){
 /* ── WEEKLY ── */
 function initWeekly(){
   document.getElementById('ci-datum').value=today();
-  renderCIStats();renderInsights();renderWChart();renderWellbeingChart();renderPerfChart();renderZone2Chart();renderMuscleSetsChart();renderCIMuscleCheckin();renderCIH();loadPhotos();
+  renderCIStats();renderInsights();renderWChart();renderPerfChart();renderZone2Chart();renderMuscleSetsChart();renderCIMuscleCheckin();renderCIH();loadPhotos();
   checkBackupBanner();
 }
 function checkBackupBanner(){
@@ -2610,9 +2598,6 @@ function computeInsights(){
     if(Math.abs(d)<minDelta)return;
     found.push({d:Math.abs(d),text:mk(la,ha,Math.abs(d))});
   }
-  split('schlaf',7,'energie',3,0.8,(lo,hi,d)=>`Nach <b>&lt;7h Schlaf</b> war deine <b>Energie</b> ~<b>${d.toFixed(1)} Pkt. niedriger</b> (${lo.toFixed(1)} vs ${hi.toFixed(1)}/10).`);
-  split('schlaf',7,'stimmung',3,0.8,(lo,hi,d)=>`Nach <b>&lt;7h Schlaf</b> war deine <b>Stimmung</b> ~<b>${d.toFixed(1)} Pkt. niedriger</b> (${lo.toFixed(1)} vs ${hi.toFixed(1)}/10).`);
-  split('schlafq',6,'energie',3,0.8,(lo,hi,d)=>`Bei <b>Schlafqualität &lt;6</b> war deine Energie ~<b>${d.toFixed(1)} Pkt. niedriger</b> (${lo.toFixed(1)} vs ${hi.toFixed(1)}/10).`);
   // Trainingstage → Stimmung
   (function(){const w=[],wo=[];daily.forEach(e=>{const y=num(e.stimmung);if(y==null)return;(trainDates.has(e.datum)?w:wo).push(y);});
     if(w.length>=3&&wo.length>=3){const wa=_insAvg(w),woa=_insAvg(wo),d=wa-woa;if(d>=0.8)found.push({d,text:`An <b>Trainingstagen</b> war deine Stimmung ~<b>${d.toFixed(1)} Pkt. höher</b> (${wa.toFixed(1)} vs ${woa.toFixed(1)}/10).`});}})();
