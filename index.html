@@ -665,11 +665,6 @@ body{background:#E8E3D8}
         <div class="kpi-daily-sub" id="hero-koff-sub"></div>
       </div>
       <div class="kpi-daily-card">
-        <div class="kpi-daily-eye">Schlaf h</div>
-        <div class="kpi-daily-val" id="hero-schlaf">—</div>
-        <div class="kpi-daily-sub" id="hero-schlaf-sub"></div>
-      </div>
-      <div class="kpi-daily-card">
         <div class="kpi-daily-eye">⚡ Streak</div>
         <div class="kpi-daily-val" id="hero-streak" style="color:var(--gold)">0</div>
         <div class="kpi-daily-sub">Tage geloggt</div>
@@ -703,13 +698,11 @@ body{background:#E8E3D8}
     </div>
     <div class="fr c2" style="margin-bottom:0;margin-top:10px">
       <div class="f"><label>Gewicht (kg)</label><input type="number" id="d-gewicht" step="0.1" placeholder="0.0"></div>
-      <div class="f"><label>Schlaf (h)</label><input type="number" id="d-schlaf" step="0.5" placeholder="0.0"></div>
     </div>
     <div style="display:flex;gap:6px;margin-top:10px">
       <button onclick="writeToHealth()" style="flex:1;padding:8px 6px;background:transparent;border:1px solid var(--bd);border-radius:var(--r);color:var(--txm);font-family:'Geist',sans-serif;font-size:11px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s;text-align:center" onmouseenter="this.style.borderColor='var(--goldd)'" onmouseleave="this.style.borderColor='var(--bd)'">♥ Health</button>
       <button onclick="deleteToday()" style="flex:1;padding:8px 6px;background:transparent;border:1px solid var(--bd);border-radius:var(--r);color:var(--txm);font-family:'Geist',sans-serif;font-size:11px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s;text-align:center" onmouseenter="this.style.borderColor='rgba(154,51,32,0.4)'" onmouseleave="this.style.borderColor='var(--bd)'">Eintrag löschen</button>
     </div>
-    <div class="slider-wrap" style="margin-top:14px"><div class="lbl">Schlafqualität</div><div class="slider-row"><input type="range" min="1" max="10" value="1" step="1" id="sl-schlafq" oninput="updSl('schlafq')"><span class="slider-val" id="sv-schlafq">1</span><span class="slider-max">/10</span></div></div>
     <button class="day-save-btn" onclick="saveMorning(this)">Morgen speichern</button>
   </div>
 
